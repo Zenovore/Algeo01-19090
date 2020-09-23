@@ -3,11 +3,10 @@ package Matriks;
 import java.io.*;
 class Driver{
   public static void main(String[] args){
-    Matriks m = new Matriks(3,3);
+    Matriks m = new Matriks(3,4);
     m.BacaMatriks();
-    System.out.printf("%.2f\n", m.Determinan());
-    m.Adjoin().TulisMatriks();
     System.out.println("");
-    m.Invers().TulisMatriks();
+    System.out.println("");
+    m.SPLinvers().TulisMatriks();
   }
 }

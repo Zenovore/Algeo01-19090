@@ -112,13 +112,13 @@ class Matriks {
    * @return Hasil perkalian matriks a * b
    */
   public static Matriks Kali(Matriks a, Matriks b){
-    Matriks m = new Matriks(b.baris, a.kolom);
+    Matriks m = new Matriks(a.baris, b.kolom);
 
     for(int i = 0; i < a.baris; i++){
-      for(int j = 0; j < a.kolom; j++){
-        int sum = 0;
-        for(int k = 0; k < b.kolom; k++){
-          sum += a.ElemenKe(i, k) * b.ElemenKe(k, i);
+      for(int j = 0; j < b.kolom; j++){
+        double sum = 0;
+        for(int k = 0; k < a.kolom; k++){
+          sum += a.ElemenKe(i, k) * b.ElemenKe(k, j);
         }
         m.SetElemenKe(i, j, sum);
       }
@@ -230,5 +230,21 @@ class Matriks {
 
   public Matriks Invers(){
     return(this.Adjoin().KaliSkalar(1/this.Determinan()));
+  }
+  public Matriks HapusLastKolom(){
+    int i;
+    Matriks temp = new Matriks(this.Baris(),1);
+    for(i=0;i<this.Baris();i++){
+      temp.SetElemenKe(i,0,ElemenKe(i,this.Kolom()-1));
+      this.SetElemenKe(i,this.Kolom()-1,0);
+    }
+    this.kolom = this.kolom-1;
+    return temp;
+  }
+  public Matriks SPLinvers(){
+    Matriks c,Hsl;
+    c = this.HapusLastKolom();
+    Hsl = Matriks.Kali(this.Invers(),c);
+    return Hsl;
   }
 }
