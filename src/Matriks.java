@@ -15,7 +15,7 @@ class Matriks {
   public Matriks(int baris, int kolom){
     this.baris = baris;
     this.kolom = kolom;
-    this.mat = new int[baris][kolom];
+    this.mat = new double[baris][kolom];
   }
 
   /* Operasi Baca-Tulis */
@@ -24,6 +24,13 @@ class Matriks {
    */
   public void BacaMatriks(){
     /* Baca Matriks */
+    int i,j;
+    Scanner s = new Scanner(System.in);
+    for (i=0;i<Baris();i++){
+      for (j=0;j<Kolom();j++){
+        SetElemenKe(i, j, s.nextDouble());
+      }
+    }
   }
 
   /**
@@ -109,7 +116,7 @@ class Matriks {
 
     for(int i = 0; i < a.baris; i++){
       for(int j = 0; j < a.kolom; j++){
-        double sum = 0;
+        int sum = 0;
         for(int k = 0; k < b.kolom; k++){
           sum += a.ElemenKe(i, k) * b.ElemenKe(k, i);
         }
@@ -137,8 +144,8 @@ class Matriks {
   public Matriks Transpose(){
     double[][] temp = new double[kolom][baris];
     for(int i = 0; i < baris; i++){
-      for(int j = i; j < kolom; j++){
-        temp[i][j] = this.ElemenKe(i, j);
+      for(int j = 0; j < kolom; j++){
+        temp[i][j] = this.ElemenKe(j, i);
       }
     }
     baris = kolom + baris;
@@ -152,5 +159,76 @@ class Matriks {
     return (Baris()==Kolom()) ;
 
   }
+  public double Determinan(){
+    int j ;
+    double c=0;
+    
+    if (IsKotak()){
+      if (((this.Baris()) * (this.Kolom())) == 1){
+        return (this.ElemenKe(0,0));
+      }
+      else if (((this.Baris()) * (this.Kolom())) == 4){
+        return ((this.ElemenKe(0,0)*this.ElemenKe(1,1)) - (this.ElemenKe(0,1)* this.ElemenKe(1,0)));
+      }
+      else{
+        for (j=0;j< this.Kolom() ;j++){
+      c += (this.ElemenKe(0,j) * (this.EntriKofaktor(0,j)));
+      }
+      return c;
+      }
+    }
+    else {
+      return (0.0);
+    }
+  }
+  public Matriks Kofaktor(){
+    Matriks temp = new Matriks(this.Baris(),this.Kolom());
+    int i, j;
+    if (this.Baris()<2 || this.Kolom()<2) {
+      return this;
+    }
+    else {
+      for (i=0;i<this.Baris();i++){
+        for (j=0;j<this.Kolom();j++){
+            temp.SetElemenKe(i, j, this.EntriKofaktor(i, j));
+        }
+      }
+    }
+    return temp;
+  }
+  public Matriks Adjoin(){
+    return (this.Kofaktor()).Transpose();
+  }
 
+  public double EntriKofaktor(int x, int y){
+    Matriks temp = new Matriks(this.Baris()-1,this.Kolom()-1);
+    int i,j,g=0,h=0;
+    for (i=0;i<this.Baris();i++){
+      for (j=0;j<this.Kolom();j++){
+        if (i!=x && j!=y){
+          temp.SetElemenKe(g, h, this.ElemenKe(i,j));
+          h += 1;
+          if(h==(temp.Kolom())){
+            h=0;
+            g++;
+          }
+        }
+      }
+    }
+    return ((x+y) % 2 == 0 ? 1 : -1 ) * temp.Determinan();
+  }
+
+  public Matriks KaliSkalar(double x){
+    int i,j;
+    for(i=0;i<this.Baris();i++){
+      for(j=0;j<this.Kolom();j++){
+        SetElemenKe(i, j,x*ElemenKe(i,j));
+      }    
+   }
+   return this;
+  }
+
+  public Matriks Invers(){
+    return(this.Adjoin().KaliSkalar(1/this.Determinan()));
+  }
 }
