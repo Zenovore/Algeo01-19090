@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.Scanner;
 
 class Matriks {
-  private int[][] mat;
+  private double[][] mat;
   private int baris, kolom;
 
   /**
@@ -33,7 +33,7 @@ class Matriks {
     /* Tulis Matriks */
     for(int i = 0; i < baris; i++){
       for(int j = 0; j < kolom; j++){
-        System.out.printf("%d", mat[i][j]);
+        System.out.printf("%.2f", mat[i][j]);
         if(j < kolom - 1) System.out.printf(" ");
       }
       if(i < baris - 1) System.out.println("");
@@ -63,7 +63,7 @@ class Matriks {
    * @param j kolom
    * @return elemen matriks
    */
-  public int ElemenKe(int baris, int kolom){
+  public double ElemenKe(int baris, int kolom){
     return mat[baris][kolom];
   }
 
@@ -74,7 +74,7 @@ class Matriks {
    * @param j kolom
    * @param val isi baru
    */
-  public void SetElemenKe(int i, int j, int val){
+  public void SetElemenKe(int i, int j, double val){
     mat[i][j] = val;
   }
 
@@ -109,7 +109,7 @@ class Matriks {
 
     for(int i = 0; i < a.baris; i++){
       for(int j = 0; j < a.kolom; j++){
-        int sum = 0;
+        double sum = 0;
         for(int k = 0; k < b.kolom; k++){
           sum += a.ElemenKe(i, k) * b.ElemenKe(k, i);
         }
@@ -135,7 +135,7 @@ class Matriks {
    * Mentranspose matriks
    */
   public Matriks Transpose(){
-    int[][] temp = new int[kolom][baris];
+    double[][] temp = new double[kolom][baris];
     for(int i = 0; i < baris; i++){
       for(int j = i; j < kolom; j++){
         temp[i][j] = this.ElemenKe(i, j);
