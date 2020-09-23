@@ -147,4 +147,10 @@ class Matriks {
     this.mat = temp;
     return this;
   }
+
+  public boolean IsKotak(){
+    return (Baris()==Kolom()) ;
+
+  }
+
 }
