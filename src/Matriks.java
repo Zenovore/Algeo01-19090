@@ -5,17 +5,17 @@ import java.util.Scanner;
 
 class Matriks {
   private double[][] mat;
-  private int baris, kolom;
+  private int bar, kol;
 
   /**
-   * Membuat matriks baru dengan ukuran baris x kolom
-   * @param baris jumlah baris
-   * @param kolom jumlah kolom
+   * Membuat matriks baru dengan ukuran bar x kol
+   * @param bar jumlah bar
+   * @param kol jumlah kol
    */
-  public Matriks(int baris, int kolom){
-    this.baris = baris;
-    this.kolom = kolom;
-    this.mat = new double[baris][kolom];
+  public Matriks(int bar, int kol){
+    this.bar = bar;
+    this.kol = kol;
+    this.mat = new double[bar][kol];
   }
 
   /* Operasi Baca-Tulis */
@@ -23,18 +23,18 @@ class Matriks {
    * Membaca matriks dari stdin
    * @return Matriks hasil pembacaan
    */
-  public static Matriks BacaMatriks(){
+  public static Matriks bacaMatriks(){
     /* Baca Matriks */
-    int i,j, baris,kolom;
+    int i,j, bar,kol;
     Matriks m;
 
     Scanner s = new Scanner(System.in);
-    baris = s.nextInt();
-    kolom = s.nextInt();
-    m = new Matriks(baris, kolom);
-    for (i=0;i<baris;i++){
-      for (j=0;j<kolom;j++){
-        m.SetElemenKe(i, j, s.nextDouble());
+    bar = s.nextInt();
+    kol = s.nextInt();
+    m = new Matriks(bar, kol);
+    for (i=0;i<bar;i++){
+      for (j=0;j<kol;j++){
+        m.setElemenKe(i, j, s.nextDouble());
       }
     }
     s.close();
@@ -45,84 +45,79 @@ class Matriks {
    * @param f nama file
    * @return Matriks hasil pembacaan
    */
-  public static Matriks BacaMatriks(String f){
-    int baris = 0, kolom = 0;
+  public static Matriks bacaMatriks(String f) throws FileNotFoundException {
+    int bar = 0, kol = 0;
     Matriks m = null;
 
-    try{
-      File file = new File(f);
-      Scanner s = new Scanner(file);
-      String curr;
-      while(s.hasNextLine()){
-        curr = s.nextLine();
-        kolom = curr.split(" ").length;
-        baris++;
-      }
-      s.close();
-      s = new Scanner(file);
-      m = new Matriks(baris, kolom);
-      for(int i = 0; i < m.Baris(); i++){
-        for(int j = 0; j < m.Kolom(); j++){
-          m.SetElemenKe(i, j, s.nextDouble());
-        }
-      }
-      s.close();
+    File file = new File(f);
+    Scanner s = new Scanner(file);
+    String curr;
+    while(s.hasNextLine()){
+      curr = s.nextLine();
+      kol = curr.split(" ").length;
+      bar++;
     }
-    catch(FileNotFoundException e){
-      return null;
+    s.close();
+    s = new Scanner(file);
+    m = new Matriks(bar, kol);
+    for(int i = 0; i < m.baris(); i++){
+      for(int j = 0; j < m.kolom(); j++){
+        m.setElemenKe(i, j, s.nextDouble());
+      }
     }
+    s.close();
     return m;
   }
 
   /**
    * Menuliskan matriks ke stdout
    */
-  public void TulisMatriks(){
+  public void tulisMatriks(){
     /* Tulis Matriks */
-    for(int i = 0; i < baris; i++){
-      for(int j = 0; j < kolom; j++){
+    for(int i = 0; i < bar; i++){
+      for(int j = 0; j < kol; j++){
         System.out.printf("%.2f", mat[i][j]);
-        if(j < kolom - 1) System.out.printf(" ");
+        if(j < kol - 1) System.out.printf(" ");
       }
-      if(i < baris - 1) System.out.println("");
+      if(i < bar - 1) System.out.println("");
     }
   }
 
   /* Getter atribut */
   /**
-   * Mengembalikan jumlah baris dari matriks
-   * @return Jumlah baris
+   * Mengembalikan jumlah bar dari matriks
+   * @return Jumlah bar
    */
-  public int Baris(){ 
-    return baris;
+  public int baris(){ 
+    return bar;
   }
 
   /**
-   * Mengembalikan jumlah kolom dari matriks
-   * @return Jumlah kolom
+   * Mengembalikan jumlah kol dari matriks
+   * @return Jumlah kol
    */
-  public int Kolom(){
-    return kolom;
+  public int kolom(){
+    return kol;
   }
 
   /**
-   * Mengembalikan elemen matriks di baris ke-i kolom ke-j
-   * @ param i baris
-   * @param j kolom
+   * Mengembalikan elemen matriks di bar ke-i kol ke-j
+   * @ param i bar
+   * @param j kol
    * @return elemen matriks
    */
-  public double ElemenKe(int baris, int kolom){
-    return mat[baris][kolom];
+  public double elemenKe(int bar, int kol){
+    return mat[bar][kol];
   }
 
   /* Setter atribut */
   /**
    * Mengubah elemen ke-i,j menjadi val
-   * @param i baris
-   * @param j kolom
+   * @param i bar
+   * @param j kol
    * @param val isi baru
    */
-  public void SetElemenKe(int i, int j, double val){
+  public void setElemenKe(int i, int j, double val){
     mat[i][j] = val;
   }
 
@@ -135,12 +130,12 @@ class Matriks {
    * @param plus Tambah jika true, kurang jika false
    * @return Hasil penjumlahan matriks a + b
    */
-  public static Matriks Jumlah(Matriks a, Matriks b, boolean plus){
+  public static Matriks jumlah(Matriks a, Matriks b, boolean plus){
     int sign = plus ? 1 : -1;
-    Matriks m = new Matriks(a.baris, a.kolom);
-    for(int i = 0; i < a.baris; i++){
-      for(int j = 0; j < a.kolom; j++){
-        m.SetElemenKe(i, j, a.ElemenKe(i,j) + (sign*b.ElemenKe(i,j)));
+    Matriks m = new Matriks(a.bar, a.kol);
+    for(int i = 0; i < a.bar; i++){
+      for(int j = 0; j < a.kol; j++){
+        m.setElemenKe(i, j, a.elemenKe(i,j) + (sign*b.elemenKe(i,j)));
       }
     }
     return m;
@@ -152,16 +147,16 @@ class Matriks {
    * @param b Matriks kedua
    * @return Hasil perkalian matriks a * b
    */
-  public static Matriks Kali(Matriks a, Matriks b){
-    Matriks m = new Matriks(a.baris, b.kolom);
+  public static Matriks kali(Matriks a, Matriks b){
+    Matriks m = new Matriks(a.bar, b.kol);
 
-    for(int i = 0; i < a.baris; i++){
-      for(int j = 0; j < b.kolom; j++){
+    for(int i = 0; i < a.bar; i++){
+      for(int j = 0; j < b.kol; j++){
         double sum = 0;
-        for(int k = 0; k < a.kolom; k++){
-          sum += a.ElemenKe(i, k) * b.ElemenKe(k, j);
+        for(int k = 0; k < a.kol; k++){
+          sum += a.elemenKe(i, k) * b.elemenKe(k, j);
         }
-        m.SetElemenKe(i, j, sum);
+        m.setElemenKe(i, j, sum);
       }
     }
     return m;
@@ -171,10 +166,10 @@ class Matriks {
    * Menyalin matriks lain ke matriks ini
    * @param lain Matriks lain yang akan disalin
    */
-  public void SalinMatriks(Matriks lain){
-    for(int i = 0; i < lain.baris; i++){
-      for(int j = 0; j < lain.kolom; j++){
-        this.SetElemenKe(i, j, lain.ElemenKe(i, j));
+  public void salinMatriks(Matriks lain){
+    for(int i = 0; i < lain.bar; i++){
+      for(int j = 0; j < lain.kol; j++){
+        this.setElemenKe(i, j, lain.elemenKe(i, j));
       }
     }
   }
@@ -182,38 +177,47 @@ class Matriks {
   /**
    * Mentranspose matriks
    */
-  public Matriks Transpose(){
-    double[][] temp = new double[kolom][baris];
-    for(int i = 0; i < baris; i++){
-      for(int j = 0; j < kolom; j++){
-        temp[i][j] = this.ElemenKe(j, i);
+  public Matriks transpose(){
+    double[][] temp = new double[kol][bar];
+    for(int i = 0; i < bar; i++){
+      for(int j = 0; j < kol; j++){
+        temp[i][j] = this.elemenKe(j, i);
       }
     }
-    baris = kolom + baris;
-    kolom = baris - kolom;
-    baris = baris - kolom;
+    bar = kol + bar;
+    kol = bar - kol;
+    bar = bar - kol;
     this.mat = temp;
     return this;
   }
 
-  public boolean IsKotak(){
-    return (Baris()==Kolom()) ;
+  /**
+   * Mengembalikan true jika matriks persegi
+   * @return baris == kolom
+   */
+  public boolean isKotak(){
+    return (baris()==kolom()) ;
 
   }
-  public double Determinan(){
+
+  /**
+   * Mencari determinan matriks menggunakan metode kofaktor
+   * @return determinan
+   */
+  public double determinan(){
     int j ;
     double c=0;
     
-    if (IsKotak()){
-      if (((this.Baris()) * (this.Kolom())) == 1){
-        return (this.ElemenKe(0,0));
+    if (isKotak()){
+      if (((this.baris()) * (this.kolom())) == 1){
+        return (this.elemenKe(0,0));
       }
-      else if (((this.Baris()) * (this.Kolom())) == 4){
-        return ((this.ElemenKe(0,0)*this.ElemenKe(1,1)) - (this.ElemenKe(0,1)* this.ElemenKe(1,0)));
+      else if (((this.baris()) * (this.kolom())) == 4){
+        return ((this.elemenKe(0,0)*this.elemenKe(1,1)) - (this.elemenKe(0,1)* this.elemenKe(1,0)));
       }
       else{
-        for (j=0;j< this.Kolom() ;j++){
-      c += (this.ElemenKe(0,j) * (this.EntriKofaktor(0,j)));
+        for (j=0;j< this.kolom() ;j++){
+      c += (this.elemenKe(0,j) * (this.entriKofaktor(0,j)));
       }
       return c;
       }
@@ -222,70 +226,103 @@ class Matriks {
       return (0.0);
     }
   }
-  public Matriks Kofaktor(){
-    Matriks temp = new Matriks(this.Baris(),this.Kolom());
+
+  /**
+   * Mencari matriks kofaktor dari matriks awal
+   * @return Matriks kofaktor
+   */
+  public Matriks kofaktor(){
+    Matriks temp = new Matriks(this.baris(),this.kolom());
     int i, j;
-    if (this.Baris()<2 || this.Kolom()<2) {
+    if (this.baris()<2 || this.kolom()<2) {
       return this;
     }
     else {
-      for (i=0;i<this.Baris();i++){
-        for (j=0;j<this.Kolom();j++){
-            temp.SetElemenKe(i, j, this.EntriKofaktor(i, j));
+      for (i=0;i<this.baris();i++){
+        for (j=0;j<this.kolom();j++){
+            temp.setElemenKe(i, j, this.entriKofaktor(i, j));
         }
       }
     }
     return temp;
   }
-  public Matriks Adjoin(){
-    return (this.Kofaktor()).Transpose();
+
+  /**
+   * Mencari Matriks adjoin dari matriks awal
+   * @return Matriks adjoin
+   */
+  public Matriks adjoin(){
+    return (this.kofaktor()).transpose();
   }
 
-  public double EntriKofaktor(int x, int y){
-    Matriks temp = new Matriks(this.Baris()-1,this.Kolom()-1);
+  /**
+   * Mencari entri kofaktor baris ke-x kolom ke-y
+   * @return entri kofaktor x,y
+   */
+  public double entriKofaktor(int x, int y){
+    Matriks temp = new Matriks(this.baris()-1,this.kolom()-1);
     int i,j,g=0,h=0;
-    for (i=0;i<this.Baris();i++){
-      for (j=0;j<this.Kolom();j++){
+    for (i=0;i<this.baris();i++){
+      for (j=0;j<this.kolom();j++){
         if (i!=x && j!=y){
-          temp.SetElemenKe(g, h, this.ElemenKe(i,j));
+          temp.setElemenKe(g, h, this.elemenKe(i,j));
           h += 1;
-          if(h==(temp.Kolom())){
+          if(h==(temp.kolom())){
             h=0;
             g++;
           }
         }
       }
     }
-    return ((x+y) % 2 == 0 ? 1 : -1 ) * temp.Determinan();
+    return ((x+y) % 2 == 0 ? 1 : -1 ) * temp.determinan();
   }
 
-  public Matriks KaliSkalar(double x){
+  /**
+   * Mengalikan matriks dengan suatu skalar x
+   * @return Matriks yang sudah dikali x
+   */
+  public Matriks kaliSkalar(double x){
     int i,j;
-    for(i=0;i<this.Baris();i++){
-      for(j=0;j<this.Kolom();j++){
-        SetElemenKe(i, j,x*ElemenKe(i,j));
+    for(i=0;i<this.baris();i++){
+      for(j=0;j<this.kolom();j++){
+        setElemenKe(i, j,x*elemenKe(i,j));
       }    
    }
    return this;
   }
 
-  public Matriks Invers(){
-    return(this.Adjoin().KaliSkalar(1/this.Determinan()));
+  /**
+   * Menginverse matriks
+   * @return Matriks yang sudah diinverse
+   */
+  public Matriks invers(){
+    return(this.adjoin().kaliSkalar(1/this.determinan()));
   }
-  public Matriks HapusLastKolom(){
+
+  /**
+   * Menghapus kolom terakhir dari matriks
+   * @return Matriks kolom terakhir
+   */
+  public Matriks hapusLastkolom(){
     int i;
-    Matriks temp = new Matriks(this.Baris(),1);
-    for(i=0;i<this.Baris();i++){
-      temp.SetElemenKe(i,0,ElemenKe(i,this.Kolom()-1));
-      this.SetElemenKe(i,this.Kolom()-1,0);
+    Matriks temp = new Matriks(this.baris(),1);
+    for(i=0;i<this.baris();i++){
+      temp.setElemenKe(i,0,elemenKe(i,this.kolom()-1));
+      this.setElemenKe(i,this.kolom()-1,0);
     }
-    this.kolom = this.kolom-1;
+    this.kol = this.kol-1;
     return temp;
   }
-  public Matriks SPLinvers(){
+
+  /**
+   * Mencari solusi SPL menggunakan invers matriks
+   * dari matriks augmented
+   * @return Matriks solusi SPL
+   */
+  public Matriks solusiSPLinvers(){
     Matriks c,Hsl;
-    c = this.HapusLastKolom();
-    Hsl = Matriks.Kali(this.Invers(),c);
+    c = this.hapusLastkolom();
+    Hsl = Matriks.kali(this.invers(),c);
     return Hsl;
   }
 }
