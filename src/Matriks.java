@@ -1,4 +1,4 @@
-package Matriks;
+package tubes;
 
 import java.io.*;
 import java.util.Scanner;
