@@ -1,7 +1,7 @@
 JVM = java
 JAR = jar
 JC = javac
-PNAME = Matriks
+PNAME = tubes
 JFLAGS = -g -d .
 JARFLG = cfe
 MAIN = Driver
