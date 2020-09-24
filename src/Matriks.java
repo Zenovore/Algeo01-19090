@@ -20,17 +20,58 @@ class Matriks {
 
   /* Operasi Baca-Tulis */
   /**
-   * Membaca matriks
+   * Membaca matriks dari stdin
+   * @return Matriks hasil pembacaan
    */
-  public void BacaMatriks(){
+  public static Matriks BacaMatriks(){
     /* Baca Matriks */
-    int i,j;
+    int i,j, baris,kolom;
+    Matriks m;
+
     Scanner s = new Scanner(System.in);
-    for (i=0;i<Baris();i++){
-      for (j=0;j<Kolom();j++){
-        SetElemenKe(i, j, s.nextDouble());
+    baris = s.nextInt();
+    kolom = s.nextInt();
+    m = new Matriks(baris, kolom);
+    for (i=0;i<baris;i++){
+      for (j=0;j<kolom;j++){
+        m.SetElemenKe(i, j, s.nextDouble());
       }
     }
+    s.close();
+    return m;
+  }
+  /**
+   * Membaca matriks dari file
+   * @param f nama file
+   * @return Matriks hasil pembacaan
+   */
+  public static Matriks BacaMatriks(String f){
+    int baris = 0, kolom = 0;
+    Matriks m = null;
+
+    try{
+      File file = new File(f);
+      Scanner s = new Scanner(file);
+      String curr;
+      while(s.hasNextLine()){
+        curr = s.nextLine();
+        kolom = curr.split(" ").length;
+        baris++;
+      }
+      s.close();
+      s = new Scanner(file);
+      m = new Matriks(baris, kolom);
+      for(int i = 0; i < m.Baris(); i++){
+        for(int j = 0; j < m.Kolom(); j++){
+          m.SetElemenKe(i, j, s.nextDouble());
+        }
+      }
+      s.close();
+    }
+    catch(FileNotFoundException e){
+      return null;
+    }
+    return m;
   }
 
   /**
