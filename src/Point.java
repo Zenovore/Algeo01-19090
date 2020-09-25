@@ -49,6 +49,7 @@ class Point{
    * @param file nama file
    * @return Array of point
    */
+  /*
   public static Point[] bacaPoint(String file){
     double x, y;
     File f;
@@ -74,4 +75,6 @@ class Point{
 
     return p;
   }
+  */
 }
+
