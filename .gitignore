@@ -1,2 +1,4 @@
 tubes/
 *.jar
+target/
+lib/
