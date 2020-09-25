@@ -50,7 +50,7 @@ compile-test: compile junit-download hamcrest-download
 test: compile-test
 	$(JVM) \
 		--class-path $(OUT)test:$(OUT):lib/$(JUnit.jar):lib/$(Hamcrest.jar) \
-		org.junit.runner.JUnitCore MatriksTest
+		org.junit.runner.JUnitCore MatriksTest PointTest
 
 .PHONY: clean all
 
