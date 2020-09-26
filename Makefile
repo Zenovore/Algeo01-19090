@@ -1,6 +1,9 @@
 JVM = java
 JAR = jar
 JC = javac
+LIB = lib/
+CURL = curl
+CURLF = -s
 PNAME = tubes
 OUT = target/
 JFLAGS = -g -d $(OUT)
@@ -37,10 +40,14 @@ dirs:
 	mkdir -p lib
 
 hamcrest-download: dirs
-	curl -s -z lib/$(Hamcrest.jar) -o lib/$(Hamcrest.jar) $(Hamcrest.mvn)
+ifeq (, $(wildcard lib/$(Hamcrest.jar)))
+	$(CURL) $(CURLF) -z lib/$(Hamcrest.jar) -o lib/$(Hamcrest.jar) $(Hamcrest.mvn)
+endif
 
 junit-download: dirs
-	curl -s -z lib/$(JUnit.jar) -o lib/$(JUnit.jar) $(JUnit.mvn)
+ifeq (, $(wildcard lib/$(JUnit.jar)))
+	$(CURL) $(CURLF) -z lib/$(JUnit.jar) -o lib/$(JUnit.jar) $(JUnit.mvn)
+endif
 
 compile-test: compile junit-download hamcrest-download
 	$(JC) -d $(OUT)test \
