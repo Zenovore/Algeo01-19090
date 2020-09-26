@@ -1,4 +1,3 @@
-tubes/
 *.jar
-target/
+bin/test/
 lib/

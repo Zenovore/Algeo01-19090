@@ -5,7 +5,7 @@ LIB = lib/
 CURL = curl
 CURLF = -s
 PNAME = tubes
-OUT = target/
+OUT = bin/
 JFLAGS = -g -d $(OUT)
 JARFLG = cfe
 MAIN = Driver
@@ -30,7 +30,7 @@ run: compile
 	cd $(OUT); $(JVM) $(addprefix $(PNAME)., $(MAIN))
 
 tubes.jar: compile
-	$(JAR) $(JARFLG) tubes.jar $(addprefix $(PNAME)., $(MAIN)) $(OUT)/$(PNAME)
+	$(JAR) $(JARFLG) tubes.jar $(addprefix $(PNAME)., $(MAIN)) -C $(OUT) $(PNAME)
 
 runJar: tubes.jar
 	$(JVM) -jar tubes.jar
