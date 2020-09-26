@@ -7,6 +7,7 @@ import java.util.Scanner;
 public class Matriks {
   private double[][] mat;
   private int bar, kol;
+  private int swaps = 0;
 
   /**
    * Membuat matriks baru dengan ukuran bar x kol
@@ -99,6 +100,15 @@ public class Matriks {
    */
   public int kolom(){
     return kol;
+  }
+
+  /**
+   * Mengembalikan jumlah pertukaran baris yang sudah
+   * dilakukan pada matriks
+   * @return jumlah pertukaran baris
+   */
+  public int jumlahTukar(){
+    return swaps;
   }
 
   /**
@@ -319,7 +329,7 @@ public class Matriks {
    * Membuat matriks eselon baris menggunakan metode Gauss
    * @return Matriks eselon baris
    */
-  public Matriks Gauss(){
+  public Matriks gauss(){
     /** TODO: STUB! */
     return null;
   }
@@ -329,8 +339,60 @@ public class Matriks {
    * @return Matriks eselon baris tereduksi
    */
   public Matriks gaussJordan(){
-    /** TODO: STUB! */
-    return null;
+    /* Implementasi: metode Gauss, menggunakan pivot */
+    /* Cari elemen x terbesar tiap kolom, misal i, lalu tukar baris ke-i dengan
+     * baris dengan baris berisi x */
+    int i, j, k;
+    for(i = 0; i < this.kolom() && i < this.baris(); i++){
+      k = i;
+      for(j = i+1; j < this.baris(); j++){
+        if(elemenKe(j, i) > elemenKe(k, i)) k = j;
+      }
+      if(i != k) tukarBaris(i, k);
+      /* Hapus elemen diatas dan dibawah lead */
+      double mult;
+      for(j = 0; j < this.baris(); j++){
+        mult = elemenKe(j, i)/elemenKe(i, i);
+        for(k = 0; k < this.kolom(); k++){
+          if(i != j) setElemenKe(j, k, elemenKe(j, k) - (elemenKe(i, k)*mult));
+          else setElemenKe(j, k, elemenKe(j, k)/elemenKe(i, i));
+        }
+      }
+    }
+    return this;
+  }
+
+  /**
+   * Menukar satu baris indeks i dengan baris indeks j
+   * @param i indeks baris pertama yang akan dipertukarkan
+   * @param j indeks baris kedua yang akan dipertukarkan
+   * @return Matriks yang baris i dan j sudah ditukar
+   */
+  public Matriks tukarBaris(int i, int j){
+    double temp;
+    for(int k = 0; k < kolom(); k++){
+      temp = elemenKe(i, k);
+      setElemenKe(i, k, elemenKe(j, k));
+      setElemenKe(j, k, temp);
+    }
+    swaps++;
+    return this;
+  }
+
+  /**
+   * Menukar satu kolom indeks i dengan kolom indeks j
+   * @param i indeks kolom pertama yang akan ditukar
+   * @param j indeks kolom kedua yang akan ditukar
+   * @return Matriks dengan kolom i dan j sudah tertukar
+   */
+  public Matriks tukarKolom(int i, int j){
+    double temp;
+    for(int k = 0; k < baris(); k++){
+      temp = elemenKe(k, i);
+      setElemenKe(k, i, elemenKe(k, j));
+      setElemenKe(k, j, temp);
+    }
+    return this;
   }
 
   /**
