@@ -183,6 +183,8 @@ public class Matriks {
         this.setElemenKe(i, j, lain.elemenKe(i, j));
       }
     }
+    this.bar = lain.bar;
+    this.kol = lain.kol;
   }
 
   /**
