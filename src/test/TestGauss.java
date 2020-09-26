@@ -22,11 +22,13 @@ public class TestGauss{
 
   @Test
   public void ujiMetodeGauss(){
+    m.gauss();
     for(int i = 0; i < 3; i++){
       for(int j = 0; j < 3; j++){
         if(i == j) assertEquals(1, m.elemenKe(i, j), epsilon);
         else assertEquals(0, m.elemenKe(i, j), epsilon);
       }
     }
+    assertEquals(0, m.jumlahTukar());
   }
 }

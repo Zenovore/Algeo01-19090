@@ -22,9 +22,10 @@ public class TestGaussJordan{
 
   @Test
   public void ujiMetodeGaussJordan(){
+    m.gaussJordan();
     for(int i = 0; i < 3; i++){
       for(int j = 0; j < 3; j++){
-        if(i == j) assertEquals(25, m.elemenKe(i, j), epsilon);
+        if(i == j) assertEquals(1, m.elemenKe(i, j), epsilon);
         else assertEquals(0, m.elemenKe(i, j), epsilon);
       }
     }
