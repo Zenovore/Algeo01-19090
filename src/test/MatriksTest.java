@@ -16,7 +16,10 @@ import org.junit.runners.Suite;
   TestAdjoinMatriks.class,
   TestKaliSkalarMatriks.class,
   TestInversMatriks.class,
-  TestHapusLastKolom.class
+  TestHapusLastKolom.class,
+  TestGaussJordan.class,
+  TestGauss.class,
+  TestTukarKolom.class
 })
 public class MatriksTest {
 }
