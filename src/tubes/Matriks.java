@@ -31,7 +31,9 @@ public class Matriks {
     Matriks m;
 
     Scanner s = new Scanner(System.in);
+    System.out.printf("Masukan Baris ");
     bar = s.nextInt();
+    System.out.printf("Masukan Kolom ");
     kol = s.nextInt();
     m = new Matriks(bar, kol);
     for (i=0;i<bar;i++){
@@ -235,8 +237,12 @@ public class Matriks {
       return c;
       }
     }
-    else {
-      return (0.0);
+    else if ((this.baris()) == ((this.kolom())-1)) {
+      this.hapusLastkolom();
+      return (this.determinan());
+    }
+    else{
+      return(0.0);
     }
   }
 
