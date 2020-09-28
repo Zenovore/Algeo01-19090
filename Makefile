@@ -62,4 +62,4 @@ test: compile-test
 .PHONY: clean all
 
 clean:
-	$(RM) -r Matriks *.jar target
+	$(RM) -r Matriks *.jar bin
