@@ -518,7 +518,7 @@ public class Matriks {
       else{
         for(int i = 0; i < baris(); i++){
           /* Tulis Solusi SPL */
-          System.out.printf("x%d = %.5f", i+1, elemenKe(i, 0));
+          System.out.printf("x%d = %.2f\n", i+1, elemenKe(i, 0));
         }
       }
     }
@@ -548,12 +548,12 @@ public class Matriks {
           }
           System.out.printf("x%d = ", i+1);
           if(count == 1){
-            System.out.printf("%.5f", elemenKe(i, this.kolom()-1));
+            System.out.printf("%.2f", elemenKe(i, this.kolom()-1));
             for(int j = 0; j < this.kolom()-1; j++){
               if(Math.abs(elemenKe(last, j)) > 1e-10 && i != j){
                 if(elemenKe(last, j) > 0) System.out.print(" + ");
                 else System.out.print(" - ");
-                System.out.printf("%.5f%c", Math.abs(elemenKe(last, j)), (char)('s'+j));
+                System.out.printf("%.2f%c", Math.abs(elemenKe(last, j)), (char)('s'+j));
               }
             }
           }
