@@ -1,127 +1,108 @@
 package tubes;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 class Driver{
   public static void main(String[] args){
-    int x;
-    Matriks a;
-    String  f;
+    int menu, source;
+    Matriks a = new Matriks(0, 0);
+    String f;
     Scanner s = new Scanner(System.in);
     System.out.printf("MENU");
     System.out.printf("\n1. Sistem Persamaan Linear\n2. Determinan \n3. Matriks balikan \n4. Interpolasi Polinom \n5. Regresi Linier Berganda \n6. Keluar\n");
-    x = s.nextInt();
-    a = null;
-      if (x==1){ /* SPL */
-        System.out.printf("\n1.Input File \n2.Input dari Keyboard \nMasukan Input ");
-        x = s.nextInt();
-        if (x==1){
-          f = s.nextLine();
-          /*
-          try {
-            a = Matriks.bacaMatriks(f);
-          } catch (Exception e) {
-            s.close();
-            return  ;
-          }
-          */
+    menu = s.nextInt();
+    s.nextLine();
+    if(0 < menu && menu < 7){ /* First input valid */
+      System.out.printf("\n1.Input File \n2.Input dari Keyboard \nMasukan Input ");
+      source = s.nextInt();
+      s.nextLine();
+      if(source == 1){
+        f = s.nextLine();
+        try{
+          a = Matriks.bacaMatriks(f);
         }
-        else if (x==2){
-          a = Matriks.bacaMatriks();
-        }
-        else{
-          System.out.printf("\nSalah input,ayo masukin yang bener >.<\n");
-        }
-        System.out.printf("\n1.Metode Eliminasi Gauss \n2.Metode Eliminasi Gauss-Jordan  \n3.Metode Matriks balikan  \n4.Kaidah Crammer\nMasukan Input ");
-        x = s.nextInt();
-        if (x==1){
-          /* Gauss */
-        }
-        else if (x==2){
-          /* Gauss Jordan */
-        }
-        else if (x==3){/* METODE INVERS */
-          a.solusiSPLinvers().tulisMatriks();
-        }
-        else if (x==4){
-          /*crammer*/
-        }
-        else{
-          System.out.printf("\nSalah input,ayo masukin yang bener >.<\n");
+        catch(FileNotFoundException e){
+          s.close();
+          return;
         }
       }
-      else if (x==2){ /* DETERMINAN */
-        System.out.printf("\n1.Input File \n2.Input dari Keyboard \nMasukkan Input ");
-        x = s.nextInt();
-        if (x==1){
-          f = s.nextLine();
-          /*
-          try {
-            a = Matriks.bacaMatriks(f);
-          } catch (Exception e) {
-            s.close();
-            return ;
-          }
-          */
-        }
-        else if (x==2){
-          a = Matriks.bacaMatriks();
-        }
+      else if(source == 2){
+        a = Matriks.bacaMatriks(s);
+      }
+      s = new Scanner(System.in);
 
-        System.out.printf("\n1.Metode Reduksi baris \n2.Metode Ekspansi Kofaktor\nMasukkan Input ");
-        x = s.nextInt();
-        if (x==1){
-          /* Reduksi baris */
+      /*---- 1. SPL ----*/
+      if(menu == 1){
+        System.out.println("1. Metode Eliminasi Gauss");
+        System.out.println("2. Metode Eliminasi Gauss-Jordan");
+        System.out.println("3. Metode Matriks balikan");
+        System.out.println("4. Kaidah Cramer");
+        System.out.printf("Masukkan input: ");
+        menu = s.nextInt();
+        if(menu == 1){
+          a.gauss();
         }
-        else if (x==2){
-          System.out.printf("%.2f",a.determinan());
+        else if(menu == 2){
+          a.solusiSPLGaussJordan().tulisSolusiSPL();
+        }
+        else if(menu == 3){
+          a.solusiSPLinvers();
+        }
+        else if(menu == 4){
+          /* Cramer */
         }
         else{
-          System.out.printf("\nSalah input,ayo masukin yang bener >.<\n");
+          System.out.println("Salah input, ayo masukin yang bener >.<");
         }
       }
-      else if(x==3){ /* INVERS */
-        System.out.printf("\n1.Input File \n2.Input dari Keyboard \nMasukkan Input ");
-        x = s.nextInt();
-        if (x==1){
-          f = s.nextLine();
-          /*
-          try {
-            a = Matriks.bacaMatriks(f);
-          } catch (Exception e) {
-            s.close();
-            return ;
-          }
-          */
+
+      /*---- 2. DETERMINAN ----*/
+      else if(menu == 2){
+        System.out.println("1. Metode Reduksi Baris");
+        System.out.println("2. Metode Ekspansi Kofaktor");
+        System.out.printf("Masukkan input: ");
+        menu = s.nextInt();
+        if(menu == 1){
+          /* Reduksi baris */
+          a.gauss();
         }
-        else if (x==2){
-          a = Matriks.bacaMatriks();
+        else if(menu == 2){
+          System.out.printf("%.2f", a.determinan());
         }
         else{
-          System.out.printf("\nSalah input,ayo masukin yang bener >.<\n");
+          System.out.println("Salah input, ayo masukin yang bener >.<");
         }
-        System.out.printf("\n1.Metode OBE \n2.Metode Adjoin\nMasukkan Input ");
-        x = s.nextInt();
-        if (x==1){
+      }
+
+      /*---- 3. INVERS ----*/
+      else if(menu == 3){
+        System.out.println("1. Metode OBE");
+        System.out.println("2. Metode Adjoin");
+        System.out.printf("Masukkan input: ");
+        menu = s.nextInt();
+        if(menu == 1){
           /* OBE */
         }
-        else if (x==2){
+        if(menu == 2){
           a.invers().tulisMatriks();
         }
         else{
-          System.out.printf("\nSalah input,ayo masukin yang bener >.<\n");
+          System.out.println("Salah input, ayo masukin yang bener >.<");
         }
       }
-      else if (x==4){/* Interpolasi Polinom */
-        /* Interpolasi Polinom */
+
+      /*----4. INTERPOLASI POLINOM----*/
+      else if(menu == 4){
+        /* TODO: Buat interpolasi polinom */
       }
-      else if (x==5){/* Regresi Linear */
-        /* Regresi Linear */
-      }
-      else if (x==6){ /* EXIT */
-        s.close();
-        System.exit(0);
+
+      /*----5. REGRESI LINEAR----*/
+      else if(menu == 5){
+        /* TODO: Buat regresi linear */
       }
       else{
         System.out.printf("\nSalah input,ayo masukin yang bener >.<\n");
       }
+    }
+    s.close();
   }
 }
