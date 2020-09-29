@@ -90,6 +90,9 @@ class Driver{
           System.out.println("\n");
         }
         else{
+          a.tambahkolom(a.kolom(), a.identitas(a.kolom())).tulisMatriks();
+          System.out.println("\n");
+
           System.out.println("Salah input, ayo masukin yang bener >.<");
         }
       }
