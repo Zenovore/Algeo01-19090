@@ -25,12 +25,11 @@ public class Matriks {
    * Membaca matriks dari stdin
    * @return Matriks hasil pembacaan
    */
-  public static Matriks bacaMatriks(){
+  public static Matriks bacaMatriks(Scanner s){
     /* Baca Matriks */
     int i,j, bar,kol;
     Matriks m;
 
-    Scanner s = new Scanner(System.in);
     System.out.printf("Masukan Baris ");
     bar = s.nextInt();
     System.out.printf("Masukan Kolom ");
@@ -41,7 +40,6 @@ public class Matriks {
         m.setElemenKe(i, j, s.nextDouble());
       }
     }
-    s.close();
     return m;
   }
   /**
@@ -419,7 +417,7 @@ public class Matriks {
     /* Cari elemen x terbesar tiap kolom, misal i, lalu tukar baris ke-i dengan
      * baris dengan baris berisi x */
     int i, j, k;
-    for(i = 0; i < this.kolom() && i < this.baris(); i++){
+    for(i = 0; i < this.baris(); i++){
       k = i;
       for(j = i+1; j < this.baris(); j++){
         if(elemenKe(j, i) > elemenKe(k, i)) k = j;
@@ -429,9 +427,11 @@ public class Matriks {
       double mult;
       for(j = 0; j < this.baris(); j++){
         mult = elemenKe(j, i)/elemenKe(i, i);
-        for(k = 0; k < this.kolom(); k++){
-          if(i != j) setElemenKe(j, k, elemenKe(j, k) - (elemenKe(i, k)*mult));
-          else setElemenKe(j, k, elemenKe(j, k)/elemenKe(i, i));
+        if(!Double.isNaN(mult) && Double.isFinite(mult)){
+          for(k = 0; k < this.kolom(); k++){
+            if(i != j) setElemenKe(j, k, elemenKe(j, k) - (elemenKe(i, k)*mult));
+            else setElemenKe(j, k, elemenKe(j, k)/elemenKe(i, i));
+          }
         }
       }
     }
@@ -492,5 +492,80 @@ public class Matriks {
     c = this.hapusLastkolom();
     Hsl = Matriks.kali(this.invers(),c);
     return Hsl;
+  }
+
+  /**
+   * Mencari solusi SPL menggunakan metode Gauss-Jordan
+   * @return Matriks augmented solusi SPL
+   */
+  public Matriks solusiSPLGaussJordan(){
+    this.gaussJordan();
+    return this;
+  }
+
+  /**
+   * Menuliskan solusi SPL ke layar, jika memungkinkan maka dalam jawaban pasti
+   * jika tidak maka menggunakan solusi parametrik
+   * Jika tidak ada solusi, mengeluarkan "Tidak ada solusi untuk SPL"
+   */
+  public void tulisSolusiSPL(){
+    if(this.kolom() == 1){
+      /* Menggunakan Invers */
+      if(Double.isNaN(elemenKe(0, 0))){
+        /* Tidak ada solusi */
+        System.out.println("Tidak ada solusi untuk SPL");
+      }
+      else{
+        for(int i = 0; i < baris(); i++){
+          /* Tulis Solusi SPL */
+          System.out.printf("x%d = %.5f", i+1, elemenKe(i, 0));
+        }
+      }
+    }
+    else{
+      /* Gauss atau Gauss-Jordan */
+      boolean punyaSolusi = true;
+      if(Math.abs(elemenKe(baris()-1, baris()-1)) < 1e-10){
+        /* Punya solusi banyak, atau tidak punya solusi sama sekali */
+        if(Math.abs(elemenKe(baris()-1, baris())) > 1e-10){
+          /* tidak punya solusi */
+          punyaSolusi = false;
+        }
+      }
+      if(punyaSolusi){
+        /* Cek tiap kolom, untuk yang punya lebih dari satu,
+         * jadikan bentuk parametrik */
+        int count, last;
+        for(int i = 0; i < this.kolom()-1; i++){
+          /* cari "first occurence" */
+          count = 0;
+          last = i;
+          for(int j = 0; j < this.baris(); j++){
+            if(Math.abs(elemenKe(j, i)) > 1e-10){
+              last = j;
+              count++;
+            }
+          }
+          System.out.printf("x%d = ", i+1);
+          if(count == 1){
+            System.out.printf("%.5f", elemenKe(i, this.kolom()-1));
+            for(int j = 0; j < this.kolom()-1; j++){
+              if(Math.abs(elemenKe(last, j)) > 1e-10 && i != j){
+                if(elemenKe(last, j) > 0) System.out.print(" + ");
+                else System.out.print(" - ");
+                System.out.printf("%.5f%c", Math.abs(elemenKe(last, j)), (char)('s'+j));
+              }
+            }
+          }
+          if(count > 1){
+            System.out.print((char)('s'+i));
+          }
+          System.out.println();
+        }
+      }
+      else{
+        System.out.println("Tidak ada solusi untuk SPL");
+      }
+    }
   }
 }
