@@ -101,6 +101,8 @@ class Driver{
 
       /*----5. REGRESI LINEAR----*/
       else if(menu == 5){
+        a.regresi().solusiSPLinvers().tulisSolusiSPL();
+        System.out.println("\n");
         /* TODO: Buat regresi linear */
       }
       else{

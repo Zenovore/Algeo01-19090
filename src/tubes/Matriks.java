@@ -192,8 +192,8 @@ public class Matriks {
    */
   public Matriks transpose(){
     double[][] temp = new double[kol][bar];
-    for(int i = 0; i < bar; i++){
-      for(int j = 0; j < kol; j++){
+    for(int i = 0; i < kol; i++){
+      for(int j = 0; j < bar; j++){
         temp[i][j] = this.elemenKe(j, i);
       }
     }
@@ -342,9 +342,32 @@ public class Matriks {
           temp.setElemenKe(i, j, this.elemenKe(i, j));
         }
         else {
-          temp.setElemenKe(i, j, b.elemenKe(i, j-a));
+          temp.setElemenKe(i, j, b.elemenKe(i, j-this.kolom()));
         }
       }
+    }
+    return temp;
+  }
+  public Matriks tambahkolomdepan(int a,Matriks b){
+    int i,j;
+    Matriks temp = new Matriks(this.baris(),this.kolom()+a);
+    for(i=0;i<this.baris();i++){
+      for(j=0;j<this.kolom()+a;j++){
+        if (j<a){
+          temp.setElemenKe(i, j, b.elemenKe(i, j));
+        }
+        else {
+          temp.setElemenKe(i, j, this.elemenKe(i, j-a));
+        } 
+      }
+    }
+    return temp; 
+  }
+  public Matriks kolomElemenSama(int a,int b){
+    Matriks temp = new Matriks(a,1);
+    int i;
+    for(i=0;i<a;i++){
+      temp.setElemenKe(i,0,b);
     }
     return temp;
   }
@@ -618,5 +641,35 @@ public class Matriks {
         System.out.println("Tidak ada solusi untuk SPL");
       }
     }
+  }
+  public Matriks regresi(){
+    Matriks a,y;
+    Matriks b = new Matriks(this.baris(),this.kolom());
+    Matriks c = new Matriks(this.baris(),1);
+    this.simplify();
+    this.tulisMatriks();
+    System.out.println("\n");
+    c.salinMatriks(this.hapusLastkolom());
+    b.salinMatriks(this);
+    b.transpose();
+    a = kali(b,this);
+    a.tulisMatriks();
+    System.out.println("\n");
+    y = kali(b,c);
+    y.tulisMatriks();
+    System.out.println("\n");
+    a = a.tambahkolom(1, y);
+    return(a);
+  }
+  public Matriks simplify(){
+    int i,j;
+    double a;
+    for(i=0;i<this.baris();i++){
+      a = elemenKe(i,0);
+      for(j=0;j<this.kolom();j++){
+        this.setElemenKe(i, j, (this.elemenKe(i, j)/a));
+      }
+    }
+    return this;
   }
 }
