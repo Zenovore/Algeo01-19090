@@ -82,10 +82,10 @@ class Driver{
         menu = s.nextInt();
         if(menu == 1){
           /* OBE */
-          a.tambahkolom(a.kolom(), a.identitas(a.kolom())).gauss().gaussJordan().hapuskolom(a.baris()).tulisMatriks();
+          a.tambahkolom(a.kolom(), a.identitas(a.kolom())).gaussJordan().hapuskolom(a.baris()).tulisMatriks();
           System.out.println("\n");
         }
-        if(menu == 2){
+        else if(menu == 2){
           a.invers().tulisMatriks();
           System.out.println("\n");
         }

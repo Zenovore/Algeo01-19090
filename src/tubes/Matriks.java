@@ -476,11 +476,12 @@ public class Matriks {
       /* Hapus elemen diatas dan dibawah lead */
       double mult;
       for(j = 0; j < this.baris(); j++){
-        mult = elemenKe(j, i)/elemenKe(i, i);
-        if(!Double.isNaN(mult) && Double.isFinite(mult)){
+        if(i != j) mult = elemenKe(j, i)/elemenKe(i, i);
+        else mult = 1/elemenKe(i, i);
+        if(Double.isFinite(mult)){
           for(k = 0; k < this.kolom(); k++){
             if(i != j) setElemenKe(j, k, elemenKe(j, k) - (elemenKe(i, k)*mult));
-            else setElemenKe(j, k, elemenKe(j, k)/elemenKe(i, i));
+            else setElemenKe(j, k, elemenKe(j, k)*mult);
           }
         }
       }
