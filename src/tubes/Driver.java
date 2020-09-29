@@ -67,10 +67,10 @@ class Driver{
           a.gauss();
         }
         else if(menu == 2){
-          System.out.printf("%.2f", a.determinan());
+          System.out.printf("%.2f\n", a.determinan());
         }
         else{
-          System.out.println("Salah input, ayo masukin yang bener >.<");
+          System.out.println("\nSalah input, ayo masukin yang bener >.<");
         }
       }
 
@@ -82,9 +82,12 @@ class Driver{
         menu = s.nextInt();
         if(menu == 1){
           /* OBE */
+          a.tambahkolom(a.kolom(), a.identitas(a.kolom())).gauss().gaussJordan().hapuskolom(a.baris()).tulisMatriks();
+          System.out.println("\n");
         }
         if(menu == 2){
           a.invers().tulisMatriks();
+          System.out.println("\n");
         }
         else{
           System.out.println("Salah input, ayo masukin yang bener >.<");
