@@ -1,4 +1,5 @@
 package tubes;
+
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 class Driver{
@@ -11,7 +12,7 @@ class Driver{
     System.out.printf("\n1. Sistem Persamaan Linear\n2. Determinan \n3. Matriks balikan \n4. Interpolasi Polinom \n5. Regresi Linier Berganda \n6. Keluar\n");
     menu = s.nextInt();
     s.nextLine();
-    if(0 < menu && menu < 7){ /* First input valid */
+    if(0 < menu && menu < 6){ /* First input valid */
       System.out.printf("\n1.Input File \n2.Input dari Keyboard \nMasukan Input ");
       source = s.nextInt();
       s.nextLine();
@@ -45,7 +46,7 @@ class Driver{
           a.solusiSPLGaussJordan().tulisSolusiSPL();
         }
         else if(menu == 3){
-          a.solusiSPLinvers();
+          a.solusiSPLinvers().tulisSolusiSPL();
         }
         else if(menu == 4){
           /* Cramer */
@@ -102,6 +103,13 @@ class Driver{
       else{
         System.out.printf("\nSalah input,ayo masukin yang bener >.<\n");
       }
+    }
+    else if(menu == 6){
+      s.close();
+      return;
+    }
+    else{
+      System.out.printf("\nSalah input,ayo masukin yang bener >.<\n");
     }
     s.close();
   }
