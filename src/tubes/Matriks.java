@@ -466,26 +466,37 @@ public class Matriks {
     /* Implementasi: metode Gauss, menggunakan pivot */
     /* Cari elemen x terbesar tiap kolom, misal i, lalu tukar baris ke-i dengan
      * baris dengan baris berisi x */
-    int i, j, k;
-    for(i = 0; i < this.baris(); i++){
-      k = i;
-      for(j = i+1; j < this.baris(); j++){
-        if(elemenKe(j, i) > elemenKe(k, i)) k = j;
+    int i, j, k, l, m;
+    m = 0;
+    for(i = 0; i < this.kolom()-1; i ++){
+      boolean allZero = true;
+      l = m;
+      for(j = l; j < this.baris() && allZero; j++){
+        if(Math.abs(elemenKe(j, i)) > 1e-10){
+          l = j;
+          allZero = false;
+          System.out.println(l +" "+ i);
+          m++;
+        }
       }
-      if(i != k) tukarBaris(i, k);
-      /* Hapus elemen diatas dan dibawah lead */
-      double mult;
-      for(j = 0; j < this.baris(); j++){
-        if(i != j) mult = elemenKe(j, i)/elemenKe(i, i);
-        else mult = 1/elemenKe(i, i);
-        if(Double.isFinite(mult)){
-          for(k = 0; k < this.kolom(); k++){
-            if(i != j) setElemenKe(j, k, elemenKe(j, k) - (elemenKe(i, k)*mult));
-            else setElemenKe(j, k, elemenKe(j, k)*mult);
+      if(allZero) continue;
+      else{
+        if(l != i && i < baris()) tukarBaris(l, i);
+        double mult;
+        for(k = 0; k < this.baris(); k++){
+          if(l != k) mult = elemenKe(k, i) / elemenKe(l, i);
+          else mult = 1/elemenKe(l, i);
+          if(Double.isFinite(mult)){
+            for(j = 0; j < this.kolom(); j++){
+              if(l != k) setElemenKe(k, j, elemenKe(k, j) - elemenKe(l, j)*mult);
+              else setElemenKe(k, j, elemenKe(k, j)*mult);
+            }
           }
         }
       }
     }
+    this.tulisMatriks();
+    System.out.println();
     return this;
   }
 
@@ -576,17 +587,16 @@ public class Matriks {
     else{
       /* Gauss atau Gauss-Jordan */
       boolean punyaSolusi = true;
-      if(Math.abs(elemenKe(baris()-1, baris()-1)) < 1e-10){
-        /* Punya solusi banyak, atau tidak punya solusi sama sekali */
-        if(Math.abs(elemenKe(baris()-1, baris())) > 1e-10){
-          /* tidak punya solusi */
-          punyaSolusi = false;
-        }
+      boolean barisNol = true;
+      int count;
+      for(int i = 0; i < kolom()-1; i++){
+        barisNol &= Math.abs(elemenKe(baris()-1, i)) < 1e-10;
       }
+      punyaSolusi = (barisNol && Math.abs(elemenKe(baris()-1, kolom()-1)) < 1e-10) || (!barisNol && Math.abs(elemenKe(baris()-1, kolom()-1)) > 1e-10);
       if(punyaSolusi){
         /* Cek tiap kolom, untuk yang punya lebih dari satu,
          * jadikan bentuk parametrik */
-        int count, last;
+        int last;
         for(int i = 0; i < this.kolom()-1; i++){
           /* cari "first occurence" */
           count = 0;
@@ -599,7 +609,7 @@ public class Matriks {
           }
           System.out.printf("x%d = ", i+1);
           if(count == 1){
-            System.out.printf("%.2f", elemenKe(i, this.kolom()-1));
+            System.out.printf("%.2f", elemenKe(last, this.kolom()-1));
             for(int j = 0; j < this.kolom()-1; j++){
               if(Math.abs(elemenKe(last, j)) > 1e-10 && i != j){
                 if(elemenKe(last, j) > 0) System.out.print(" + ");
@@ -608,7 +618,7 @@ public class Matriks {
               }
             }
           }
-          if(count > 1){
+          if(count > 1 || count == 0){
             System.out.print((char)('s'+i));
           }
           System.out.println();
