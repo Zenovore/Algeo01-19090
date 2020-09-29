@@ -489,33 +489,39 @@ public class Matriks {
     /* Implementasi: metode Gauss, menggunakan pivot */
     /* Cari elemen x terbesar tiap kolom, misal i, lalu tukar baris ke-i dengan
      * baris dengan baris berisi x */
-    int i, j, k, l, m;
-    m = 0;
-    for(i = 0; i < this.kolom()-1; i ++){
-      boolean allZero = true;
-      l = m;
-      for(j = l; j < this.baris() && allZero; j++){
-        if(Math.abs(elemenKe(j, i)) > 1e-10){
-          l = j;
-          allZero = false;
-          System.out.println(l +" "+ i);
-          m++;
-        }
+    int i, j, k;
+    int kolomOperasi, barisOperasi, lastFinished;
+    kolomOperasi = 0;
+    barisOperasi = 0;
+    lastFinished = 0;
+    while(lastFinished < baris()){
+      k = barisOperasi;
+      for(j = lastFinished; j < baris(); j++){
+        if(Math.abs(elemenKe(j, barisOperasi)) > Math.abs(elemenKe(k, barisOperasi))) k = j;
       }
-      if(allZero) continue;
-      else{
-        if(l != i && i < baris()) tukarBaris(l, i);
-        double mult;
-        for(k = 0; k < this.baris(); k++){
-          if(l != k) mult = elemenKe(k, i) / elemenKe(l, i);
-          else mult = 1/elemenKe(l, i);
-          if(Double.isFinite(mult)){
-            for(j = 0; j < this.kolom(); j++){
-              if(l != k) setElemenKe(k, j, elemenKe(k, j) - elemenKe(l, j)*mult);
-              else setElemenKe(k, j, elemenKe(k, j)*mult);
+      if(Math.abs(elemenKe(k, kolomOperasi)) > 1e-10){
+        if(barisOperasi != k) tukarBaris(barisOperasi, k);
+        double mult = elemenKe(barisOperasi, kolomOperasi);
+        for(i = 0; i < kolom(); i++){
+          setElemenKe(barisOperasi, i, elemenKe(barisOperasi, i)/mult);
+        }
+        for(i = 0; i < baris(); i++){
+          if(barisOperasi != i){
+            mult = elemenKe(i, kolomOperasi)/elemenKe(barisOperasi, kolomOperasi);
+            if(Double.isFinite(mult)){
+              for(j = 0; j < kolom(); j++){
+                setElemenKe(i, j, elemenKe(i, j) - elemenKe(barisOperasi, j)*mult);
+              }
             }
           }
         }
+        lastFinished++;
+        kolomOperasi++;
+      }
+      barisOperasi++;
+      if(barisOperasi >= baris()){
+        barisOperasi = lastFinished;
+        kolomOperasi++;
       }
     }
     this.tulisMatriks();
@@ -635,8 +641,8 @@ public class Matriks {
             System.out.printf("%.2f", elemenKe(last, this.kolom()-1));
             for(int j = 0; j < this.kolom()-1; j++){
               if(Math.abs(elemenKe(last, j)) > 1e-10 && i != j){
-                if(elemenKe(last, j) > 0) System.out.print(" + ");
-                else System.out.print(" - ");
+                if(elemenKe(last, j) > 0) System.out.print(" - ");
+                else System.out.print(" + ");
                 System.out.printf("%.2f%c", Math.abs(elemenKe(last, j)), (char)('s'+j));
               }
             }
