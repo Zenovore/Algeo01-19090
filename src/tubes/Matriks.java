@@ -315,7 +315,49 @@ public class Matriks {
   public Matriks invers(){
     return(this.adjoin().kaliSkalar(1/this.determinan()));
   }
+  public Matriks identitas(int a){
+    int i,j;
+    Matriks temp = new Matriks(a,a);
+    for(i=0;i<temp.baris();i++){
+      for(j=0;j<temp.kolom();j++){
+        if (i==j){
+          temp.setElemenKe(i, j,1);
+        }
+        else {
+          temp.setElemenKe(i, j,0);
+        }
+      }    
+    }
+    return temp;
+  }
+  // public Matriks invers2(){
 
+  // }
+  public Matriks tambahkolom(int a,Matriks b){
+    int i,j;
+    Matriks temp = new Matriks(this.baris(),this.kolom()+a);
+    for(i=0;i<this.baris();i++){
+      for(j=0;j<this.kolom()+a;j++){
+        if (j<this.kolom()){
+          temp.setElemenKe(i, j, this.elemenKe(i, j));
+        }
+        else {
+          temp.setElemenKe(i, j, b.elemenKe(i, j-a));
+        }
+      }
+    }
+    return temp;
+  }
+  public Matriks hapuskolom(int a){
+    int i,j;
+    Matriks temp = new Matriks(this.baris(),this.kolom()-a);
+    for(i=0;i<this.baris();i++){
+      for(j=0;j<this.kolom()-a;j++){
+        temp.setElemenKe(i, j, elemenKe(i, j+a));
+      } 
+    }
+    return temp;
+  }
   /**
    * Menghapus kolom terakhir dari matriks
    * @return Matriks kolom terakhir
@@ -331,6 +373,7 @@ public class Matriks {
     return temp;
   }
 
+
   /**
    * Membuat matriks eselon baris menggunakan metode Gauss
    * @return Matriks eselon baris
@@ -342,27 +385,26 @@ public class Matriks {
     double y=0;
     double z=0;
     int i,j,k;
-
-    double a=this.elemenKe(0,0);
+    double temp,temp2;
 
     int t=0;
-    while(a==0){
+    z=this.elemenKe(0,0);
+    while(z==0){
       t=t+1;
       for(j=0;j<C;j++){
-        double temp=this.elemenKe(0,j);
+        temp=this.elemenKe(0,j);
         this.setElemenKe(0,j,this.elemenKe(t,j));
         this.setElemenKe(t,j,temp);
-      }
       z=this.elemenKe(0,0);
+      }
     }
 
     for(j=0;j<C;j++){
       this.setElemenKe(0,j,(this.elemenKe(0,j)/z));
     }
-
     for(k=0;k<(C-1);k++){
       for(i=(k+1);i<R;i++){
-        x = this.elemenKe(i,k);
+        x=this.elemenKe(i,k);
         for(j=0;j<C;j++){
           this.setElemenKe(i,j,(this.elemenKe(i,j)-this.elemenKe(k,j)*x));
         }
@@ -380,7 +422,7 @@ public class Matriks {
 
         if(count0>i && count0!=R){
           for(j=0;j<C;j++){
-            double temp2=this.elemenKe(i,j);
+            temp2=this.elemenKe(i,j);
             this.setElemenKe(i,j,this.elemenKe(count0,j));
             this.setElemenKe(count0,j,temp2);
           }
@@ -402,6 +444,14 @@ public class Matriks {
 
         for(j=0;j<C;j++){
           this.setElemenKe(i,j,(this.elemenKe(i,j)/y));
+        }
+      }
+    }
+
+    for (i=0;i<R;i++){
+      for(j=0;j<C;j++){
+        if (this.elemenKe(i,j)==-0.00){
+          this.setElemenKe(i,j,0.00);
         }
       }
     }
