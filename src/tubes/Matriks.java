@@ -85,6 +85,21 @@ public class Matriks {
     }
   }
 
+  /**
+   * Membuat representasi string dari matriks
+   */
+  public String stringOfMatriks(){
+    StringBuilder sb = new StringBuilder();
+    for(int i = 0; i < bar; i++){
+      for(int j = 0; j < kol; j++){
+        sb.append(String.format("%.2f", elemenKe(i, j)));
+        if(j < kol - 1) sb.append(" ");
+      }
+      if(i < bar - 1) sb.append("\n");
+    }
+    return sb.toString();
+  }
+
   /* Getter atribut */
   /**
    * Mengembalikan jumlah bar dari matriks
@@ -494,7 +509,7 @@ public class Matriks {
     kolomOperasi = 0;
     barisOperasi = 0;
     lastFinished = 0;
-    while(lastFinished < baris()){
+    while(lastFinished < baris() && kolomOperasi < kolom()){
       k = barisOperasi;
       for(j = lastFinished; j < baris(); j++){
         if(Math.abs(elemenKe(j, barisOperasi)) > Math.abs(elemenKe(k, barisOperasi))) k = j;
@@ -524,8 +539,6 @@ public class Matriks {
         kolomOperasi++;
       }
     }
-    this.tulisMatriks();
-    System.out.println();
     return this;
   }
 
@@ -598,18 +611,21 @@ public class Matriks {
    * Menuliskan solusi SPL ke layar, jika memungkinkan maka dalam jawaban pasti
    * jika tidak maka menggunakan solusi parametrik
    * Jika tidak ada solusi, mengeluarkan "Tidak ada solusi untuk SPL"
+   * @param var string variabel / peubah x
+   * @return String solusi SPL
    */
-  public void tulisSolusiSPL(){
+  public String stringSolusiSPL(String var){
+    StringBuilder sb = new StringBuilder();
     if(this.kolom() == 1){
       /* Menggunakan Invers */
       if(Double.isNaN(elemenKe(0, 0))){
         /* Tidak ada solusi */
-        System.out.println("Tidak ada solusi untuk SPL");
+        sb.append("Tidak ada solusi untuk SPL");
       }
       else{
         for(int i = 0; i < baris(); i++){
           /* Tulis Solusi SPL */
-          System.out.printf("x%d = %.2f\n", i+1, elemenKe(i, 0));
+          sb.append(String.format("%s%d = %.2f", var, i+1, elemenKe(i, 0)));
         }
       }
     }
@@ -636,27 +652,28 @@ public class Matriks {
               count++;
             }
           }
-          System.out.printf("x%d = ", i+1);
+          sb.append(String.format("%s%d =", var, i+1));
           if(count == 1){
-            System.out.printf("%.2f", elemenKe(last, this.kolom()-1));
+            sb.append(String.format(" %.2f", elemenKe(last, this.kolom()-1)));
             for(int j = 0; j < this.kolom()-1; j++){
               if(Math.abs(elemenKe(last, j)) > 1e-10 && i != j){
-                if(elemenKe(last, j) > 0) System.out.print(" - ");
-                else System.out.print(" + ");
-                System.out.printf("%.2f%c", Math.abs(elemenKe(last, j)), (char)('s'+j));
+                if(elemenKe(last, j) > 0) sb.append(" - ");
+                else sb.append(" + ");
+                sb.append(String.format("%.2f%c", Math.abs(elemenKe(last, j)), (char)('s'+j)));
               }
             }
           }
           if(count > 1 || count == 0){
-            System.out.print((char)('s'+i));
+            sb.append((char)('s'+i));
           }
-          System.out.println();
+          if(i != this.kolom() - 2)sb.append(", ");
         }
       }
       else{
-        System.out.println("Tidak ada solusi untuk SPL");
+        sb.append("Tidak ada solusi untuk SPL\n");
       }
     }
+    return sb.toString();
   }
   public Matriks regresi(){
     Matriks a,y;

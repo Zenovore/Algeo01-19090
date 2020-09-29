@@ -1,6 +1,8 @@
 package tubes;
 
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Scanner;
 class Driver{
   public static void main(String[] args){
@@ -39,20 +41,41 @@ class Driver{
         System.out.println("4. Kaidah Cramer");
         System.out.printf("Masukkan input: ");
         menu = s.nextInt();
+
+        String solusi = "";
         if(menu == 1){
           a.gauss();
         }
         else if(menu == 2){
-          a.solusiSPLGaussJordan().tulisSolusiSPL();
+          solusi = a.solusiSPLGaussJordan().stringSolusiSPL("x");
         }
         else if(menu == 3){
-          a.solusiSPLinvers().tulisSolusiSPL();
+          solusi = a.solusiSPLinvers().stringSolusiSPL("x");
         }
         else if(menu == 4){
           /* Cramer */
         }
         else{
           System.out.println("Salah input, ayo masukin yang bener >.<");
+        }
+
+        System.out.println("Mau dikeluarin disini (1) ato di file(2)?");
+        menu = s.nextInt();
+        if(menu == 1){
+          System.out.println(solusi);
+        }
+        else if(menu == 2){
+          System.out.print("Nama file output: ");
+          s.nextLine();
+          String nama = s.nextLine();
+          try{
+            FileWriter w = new FileWriter(nama);
+            w.write(solusi);
+            w.close();
+          }
+          catch(IOException e){
+            System.out.println(solusi);
+          }
         }
       }
 
@@ -62,15 +85,34 @@ class Driver{
         System.out.println("2. Metode Ekspansi Kofaktor");
         System.out.printf("Masukkan input: ");
         menu = s.nextInt();
+        String solusi = "";
         if(menu == 1){
           /* Reduksi baris */
           a.gauss();
         }
         else if(menu == 2){
-          System.out.printf("%.2f\n", a.determinan());
+          solusi = String.format("%.2f", a.determinan());
         }
         else{
           System.out.println("\nSalah input, ayo masukin yang bener >.<");
+        }
+        System.out.println("Mau dikeluarin disini (1) ato di file(2)?");
+        menu = s.nextInt();
+        if(menu == 1){
+          System.out.println(solusi);
+        }
+        else if(menu == 2){
+          System.out.print("Nama file output: ");
+          s.nextLine();
+          String nama = s.nextLine();
+          try{
+            FileWriter w = new FileWriter(nama);
+            w.write(solusi);
+            w.close();
+          }
+          catch(IOException e){
+            System.out.println(solusi);
+          }
         }
       }
 
@@ -80,17 +122,34 @@ class Driver{
         System.out.println("2. Metode Adjoin");
         System.out.printf("Masukkan input: ");
         menu = s.nextInt();
+        String solusi = "";
         if(menu == 1){
           /* OBE */
-          a.tambahkolom(a.kolom(), a.identitas(a.kolom())).gaussJordan().hapuskolom(a.baris()).tulisMatriks();
-          System.out.println("\n");
+          solusi = a.tambahkolom(a.kolom(), a.identitas(a.kolom())).gaussJordan().hapuskolom(a.baris()).stringOfMatriks();
         }
         else if(menu == 2){
-          a.invers().tulisMatriks();
-          System.out.println("\n");
+          solusi = a.invers().stringOfMatriks();
         }
         else{
           System.out.println("Salah input, ayo masukin yang bener >.<");
+        }
+        System.out.println("Mau dikeluarin disini (1) ato di file(2)?");
+        menu = s.nextInt();
+        if(menu == 1){
+          System.out.println(solusi);
+        }
+        else if(menu == 2){
+          System.out.print("Nama file output: ");
+          s.nextLine();
+          String nama = s.nextLine();
+          try{
+            FileWriter w = new FileWriter(nama);
+            w.write(solusi);
+            w.close();
+          }
+          catch(IOException e){
+            System.out.println(solusi);
+          }
         }
       }
 
