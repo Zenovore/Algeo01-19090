@@ -15,6 +15,7 @@ class Driver{
     menu = s.nextInt();
     s.nextLine();
     if(0 < menu && menu < 6){ /* First input valid */
+      String solusi = "";
       System.out.printf("\n1.Input File \n2.Input dari Keyboard \nMasukan Input ");
       source = s.nextInt();
       s.nextLine();
@@ -42,9 +43,8 @@ class Driver{
         System.out.printf("Masukkan input: ");
         menu = s.nextInt();
 
-        String solusi = "";
         if(menu == 1){
-          a.gauss();
+          solusi = a.gauss().stringSolusiSPL("x");
         }
         else if(menu == 2){
           solusi = a.solusiSPLGaussJordan().stringSolusiSPL("x");
@@ -59,24 +59,6 @@ class Driver{
           System.out.println("Salah input, ayo masukin yang bener >.<");
         }
 
-        System.out.println("Mau dikeluarin disini (1) ato di file(2)?");
-        menu = s.nextInt();
-        if(menu == 1){
-          System.out.println(solusi);
-        }
-        else if(menu == 2){
-          System.out.print("Nama file output: ");
-          s.nextLine();
-          String nama = s.nextLine();
-          try{
-            FileWriter w = new FileWriter(nama);
-            w.write(solusi);
-            w.close();
-          }
-          catch(IOException e){
-            System.out.println(solusi);
-          }
-        }
       }
 
       /*---- 2. DETERMINAN ----*/
@@ -85,7 +67,6 @@ class Driver{
         System.out.println("2. Metode Ekspansi Kofaktor");
         System.out.printf("Masukkan input: ");
         menu = s.nextInt();
-        String solusi = "";
         if(menu == 1){
           /* Reduksi baris */
           a.gauss();
@@ -96,24 +77,6 @@ class Driver{
         else{
           System.out.println("\nSalah input, ayo masukin yang bener >.<");
         }
-        System.out.println("Mau dikeluarin disini (1) ato di file(2)?");
-        menu = s.nextInt();
-        if(menu == 1){
-          System.out.println(solusi);
-        }
-        else if(menu == 2){
-          System.out.print("Nama file output: ");
-          s.nextLine();
-          String nama = s.nextLine();
-          try{
-            FileWriter w = new FileWriter(nama);
-            w.write(solusi);
-            w.close();
-          }
-          catch(IOException e){
-            System.out.println(solusi);
-          }
-        }
       }
 
       /*---- 3. INVERS ----*/
@@ -122,7 +85,6 @@ class Driver{
         System.out.println("2. Metode Adjoin");
         System.out.printf("Masukkan input: ");
         menu = s.nextInt();
-        String solusi = "";
         if(menu == 1){
           /* OBE */
           solusi = a.tambahkolom(a.kolom(), a.identitas(a.kolom())).gaussJordan().hapuskolom(a.baris()).stringOfMatriks();
@@ -133,24 +95,6 @@ class Driver{
         else{
           System.out.println("Salah input, ayo masukin yang bener >.<");
         }
-        System.out.println("Mau dikeluarin disini (1) ato di file(2)?");
-        menu = s.nextInt();
-        if(menu == 1){
-          System.out.println(solusi);
-        }
-        else if(menu == 2){
-          System.out.print("Nama file output: ");
-          s.nextLine();
-          String nama = s.nextLine();
-          try{
-            FileWriter w = new FileWriter(nama);
-            w.write(solusi);
-            w.close();
-          }
-          catch(IOException e){
-            System.out.println(solusi);
-          }
-        }
       }
 
       /*----4. INTERPOLASI POLINOM----*/
@@ -160,12 +104,27 @@ class Driver{
 
       /*----5. REGRESI LINEAR----*/
       else if(menu == 5){
-        a.regresi().solusiSPLinvers().tulisSolusiSPL();
-        System.out.println("\n");
+        solusi = a.regresi().stringSolusiSPL("b");
         /* TODO: Buat regresi linear */
       }
-      else{
-        System.out.printf("\nSalah input,ayo masukin yang bener >.<\n");
+
+      System.out.println("Mau dikeluarin disini (1) ato di file(2)?");
+      menu = s.nextInt();
+      if(menu == 1){
+        System.out.println(solusi);
+      }
+      else if(menu == 2){
+        System.out.print("Nama file output: ");
+        s.nextLine();
+        String nama = s.nextLine();
+        try{
+          FileWriter w = new FileWriter(nama);
+          w.write(solusi);
+          w.close();
+        }
+        catch(IOException e){
+          System.out.println(solusi);
+        }
       }
     }
     else if(menu == 6){

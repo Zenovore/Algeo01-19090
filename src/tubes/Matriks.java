@@ -2,6 +2,9 @@ package tubes;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class Matriks {
@@ -703,6 +706,8 @@ public class Matriks {
    */
   public String stringSolusiSPL(String var){
     StringBuilder sb = new StringBuilder();
+    DecimalFormat df = new DecimalFormat("0", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
+    df.setMaximumFractionDigits(340);
     if(this.kolom() == 1){
       /* Menggunakan Invers */
       if(Double.isNaN(elemenKe(0, 0))){
@@ -712,7 +717,8 @@ public class Matriks {
       else{
         for(int i = 0; i < baris(); i++){
           /* Tulis Solusi SPL */
-          sb.append(String.format("%s%d = %.2f", var, i+1, elemenKe(i, 0)));
+          sb.append(String.format("%s%d = ", var, i+1));
+          sb.append(df.format(elemenKe(i, 0)));
         }
       }
     }
@@ -720,45 +726,64 @@ public class Matriks {
       /* Gauss atau Gauss-Jordan */
       boolean punyaSolusi = true;
       boolean barisNol = true;
-      int count;
+      int count, first;
       for(int i = 0; i < kolom()-1; i++){
         barisNol &= Math.abs(elemenKe(baris()-1, i)) < 1e-10;
       }
       punyaSolusi = (barisNol && Math.abs(elemenKe(baris()-1, kolom()-1)) < 1e-10) || (!barisNol && Math.abs(elemenKe(baris()-1, kolom()-1)) > 1e-10);
       if(punyaSolusi){
-        /* Cek tiap kolom, untuk yang punya lebih dari satu,
-         * jadikan bentuk parametrik */
-        int last;
-        for(int i = 0; i < this.kolom()-1; i++){
-          /* cari "first occurence" */
+        /* loop dari baris akhir, back-substitution */
+        double sols[] = new double[kolom()-1];
+        int useBaris[] = new int[kolom()-1];
+        for(int i = 0; i < kolom()-1; i++){
+          sols[i] = Double.NaN;
+          useBaris[i] = -1;
+        }
+        for(int i = baris()-1; i >= 0; i--){
+          // cari tidak-nol pertama
+          // kalau masih ada, parametrik
           count = 0;
-          last = i;
-          for(int j = 0; j < this.baris(); j++){
-            if(Math.abs(elemenKe(j, i)) > 1e-10){
-              last = j;
+          first = 0;
+          for(int j = kolom()-2; j >= 0; j--){
+            if(Math.abs(elemenKe(i, j)) > 1e-10){
               count++;
+              first = j;
             }
           }
-          sb.append(String.format("%s%d =", var, i+1));
           if(count == 1){
-            sb.append(String.format(" %.2f", elemenKe(last, this.kolom()-1)));
-            for(int j = 0; j < this.kolom()-1; j++){
-              if(Math.abs(elemenKe(last, j)) > 1e-10 && i != j){
-                if(elemenKe(last, j) > 0) sb.append(" - ");
+            sols[first] = elemenKe(i, kolom()-1);
+          }
+          if(count > 1){
+            sols[first] = elemenKe(i, kolom()-1);
+            for(int j = first+1; j < kolom()-1; j++){
+              if(Double.isFinite(sols[j])) sols[first] -= sols[j] * elemenKe(i, j);
+            }
+            useBaris[first] = i;
+          }
+        }
+        for(int i = 0; i < kolom()-1; i++){
+          sb.append(String.format("%s%d = ", var, i+1));
+          if(Double.isFinite(sols[i])) sb.append(df.format(sols[i]));
+          else if(useBaris[i] == -1) sb.append("bebas");
+          else{
+            for(int j = i+1; j < kolom()-1; j++){
+              if(Math.abs(elemenKe(useBaris[i], j)) > 1e-10){
+                if(elemenKe(useBaris[i], j) > 0) sb.append(" - ");
                 else sb.append(" + ");
-                sb.append(String.format("%.2f%c", Math.abs(elemenKe(last, j)), (char)('s'+j)));
+                if(Math.abs(elemenKe(useBaris[i], j))-1 > 1e-10)
+                  sb.append(df.format(Math.abs(elemenKe(useBaris[i], j))));
+                sb.append(String.format("%s%d", var, j+1));
               }
             }
           }
-          if(count > 1 || count == 0){
-            sb.append((char)('s'+i));
-          }
-          if(i != this.kolom() - 2)sb.append(", ");
+          if(i != kolom()-2) sb.append(", ");
         }
       }
       else{
         sb.append("Tidak ada solusi untuk SPL\n");
       }
+      tulisMatriks();
+      System.out.println();
     }
     return sb.toString();
   }
