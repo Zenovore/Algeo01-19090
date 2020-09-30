@@ -859,4 +859,99 @@ public class Matriks {
     }
     return hsl;
   }
+  public double determinanReduksi(){
+    int R=this.baris();
+    int C=this.kolom();
+    double x=0;
+    double y=0;
+    double z=0;
+    int i,j,k;
+    double temp,temp2;
+    double det=1;
+
+    int t=0;
+    z=this.elemenKe(0,0);
+    if(z==0){
+      det=det*(-1);
+    }
+    while(z==0){
+      t=t+1;
+      for(j=0;j<C;j++){
+        temp=this.elemenKe(0,j);
+        this.setElemenKe(0,j,this.elemenKe(t,j));
+        this.setElemenKe(t,j,temp);
+      z=this.elemenKe(0,0);
+      }
+    }
+
+    for(j=0;j<C;j++){
+      this.setElemenKe(0,j,(this.elemenKe(0,j)/z));
+    }
+    det=det*z;
+
+    for(k=0;k<(C-1);k++){
+      for(i=(k+1);i<R;i++){
+        x=this.elemenKe(i,k);
+        for(j=0;j<C;j++){
+          this.setElemenKe(i,j,(this.elemenKe(i,j)-this.elemenKe(k,j)*x));
+        }
+      }
+      
+      for(i=0;i<R;i++){
+        int count0=0;
+        j=0;
+        while(this.elemenKe(i,j)==0 && j<(C-1)){
+          if(this.elemenKe(i,j)==0){
+            count0=count0+1;
+          }
+          j=j+1;
+        }
+
+        if(count0>i && count0!=R){
+          for(j=0;j<C;j++){
+            temp2=this.elemenKe(i,j);
+            this.setElemenKe(i,j,this.elemenKe(count0,j));
+            this.setElemenKe(count0,j,temp2);
+          }
+          det=det*(-1);
+        }
+      }
+
+      for(i=0;i<R;i++){
+        boolean found=false;
+        j=0;
+        while(!found && j<R){
+          if(this.elemenKe(i,j)!=0){
+            y=this.elemenKe(i,j);
+            det=det*y;
+            found=true;
+          }
+          else{
+            j=j+1;
+          }
+        }
+
+        for(j=0;j<C;j++){
+          this.setElemenKe(i,j,(this.elemenKe(i,j)/y));
+        }
+      }
+    }
+
+    for (i=0;i<R;i++){
+      for(j=0;j<C;j++){
+        if (this.elemenKe(i,j)==-0.00){
+          this.setElemenKe(i,j,0.00);
+        }
+      }
+    }
+
+    for (i=0;i<R;i++){
+      for(j=0;j<C;j++){
+        if (this.elemenKe(i,i)==0.00){
+          det=0;
+        }
+      }
+    }
+    return det;
+  }
 }
