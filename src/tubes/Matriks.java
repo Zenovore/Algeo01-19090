@@ -411,7 +411,39 @@ public class Matriks {
     return temp;
   }
 
+  public Matriks tambahKolomDepan(){
+    int i,j;
+    Matriks sln=new Matriks(this.baris(),this.kolom());
+    sln.salinMatriks(this);
 
+    this.kol=this.kolom()+1;
+    for(i=0;i<this.baris();i++){
+      for(j=0;j<this.kolom();j++){
+        if(j==0){
+          this.setElemenKe(i,j,0);
+        }
+        else{
+          this.setElemenKe(i,j,sln.elemenKe(i,j-1));
+        }
+      }
+    }
+
+
+    return this;
+
+  }
+
+  public Matriks hapusKolomMe(){
+    int i,j;
+
+    for(i=0;i<this.baris();i++){
+      for(j=0;j<(this.kolom()-1);j++){
+        this.setElemenKe(i,j,this.elemenKe(i,j+1));
+      }
+    }
+    this.kol=this.kolom()-1;
+    return this;
+  }
   /**
    * Membuat matriks eselon baris menggunakan metode Gauss
    * @return Matriks eselon baris
@@ -424,53 +456,57 @@ public class Matriks {
     double z=0;
     int i,j,k;
     double temp,temp2;
+    boolean foundnot0;
+    boolean token=false;
 
     int t=0;
     z=this.elemenKe(0,0);
-    while(z==0){
-      t=t+1;
-      for(j=0;j<C;j++){
-        temp=this.elemenKe(0,j);
-        this.setElemenKe(0,j,this.elemenKe(t,j));
-        this.setElemenKe(t,j,temp);
-      z=this.elemenKe(0,0);
+
+    if(z==0){
+      foundnot0=false;
+      int h=0;
+      while(foundnot0==false && h<R){
+        if(this.elemenKe(h,0)!=0){
+          foundnot0=true;
+        }
+        else{
+          h=h+1;
+        }
+      }
+  
+      if(foundnot0==true){
+        for(j=0;j<C;j++){
+          temp=this.elemenKe(0,j);
+          this.setElemenKe(0,j,this.elemenKe(h,j));
+          this.setElemenKe(h,j,temp);
+        }
+        z=this.elemenKe(0,0);
+      }
+      else if(foundnot0==false){
+        this.hapusKolomMe();
+        C=C-1;
+        token=true;
+        z=this.elemenKe(0,0);
+        
       }
     }
 
     for(j=0;j<C;j++){
       this.setElemenKe(0,j,(this.elemenKe(0,j)/z));
     }
-    for(k=0;k<(C-1);k++){
+
+    for(k=0;k<(R);k++){
       for(i=(k+1);i<R;i++){
         x=this.elemenKe(i,k);
         for(j=0;j<C;j++){
           this.setElemenKe(i,j,(this.elemenKe(i,j)-this.elemenKe(k,j)*x));
         }
       }
-      
-      for(i=0;i<R;i++){
-        int count0=0;
-        j=0;
-        while(this.elemenKe(i,j)==0 && j<(C-1)){
-          if(this.elemenKe(i,j)==0){
-            count0=count0+1;
-          }
-          j=j+1;
-        }
-
-        if(count0>i && count0!=R){
-          for(j=0;j<C;j++){
-            temp2=this.elemenKe(i,j);
-            this.setElemenKe(i,j,this.elemenKe(count0,j));
-            this.setElemenKe(count0,j,temp2);
-          }
-        }
-      }
 
       for(i=0;i<R;i++){
         boolean found=false;
         j=0;
-        while(!found && j<R){
+        while(!found && j<C){
           if(this.elemenKe(i,j)!=0){
             y=this.elemenKe(i,j);
             found=true;
@@ -493,6 +529,57 @@ public class Matriks {
         }
       }
     }
+
+    int countsama=0;
+    for(k=0;k<R;k++){
+      for(i=k+1;i<R;i++){
+       for(j=0;j<C;j++){
+         if(this.elemenKe(i,j)==this.elemenKe(k,j)){
+            countsama=countsama+1;
+         }
+       }
+       if(countsama==C){
+         for(j=0;j<C;j++){
+           this.setElemenKe(i,j,0);
+         }
+       }
+       countsama=0;
+      } 
+    }
+
+    // sorting 0
+
+    int min;
+    int idxmin=0;
+    foundnot0=false;
+    int count0=0;
+    for(k=0;k<(this.baris()-1);k++){
+      min=99;
+      for(i=(k+1);i<this.baris();i++){
+        j=0;
+        while(!foundnot0 && j<this.kolom()){
+          if(this.elemenKe(i,j)==0){
+            count0=count0+1;
+            j=j+1;
+          }
+          else{
+            foundnot0=true;
+          }
+        }
+        if(count0<min){
+          min=count0;
+          idxmin=i;
+        }
+        count0=0;
+        foundnot0=false;
+      }
+      this.tukarBaris(idxmin,(k+1));
+    }
+
+    if(token==true){
+      this.tambahKolomDepan();
+    }
+
     return this;
   }
 
@@ -704,5 +791,72 @@ public class Matriks {
       }
     }
     return this;
+  }
+  public Matriks interpolasi(){
+    Matriks inter=new Matriks(this.baris(),this.baris()+1);
+    Matriks hasil;
+    int i,j,m,n;
+
+    m=0;
+    n=0;
+
+    for (i=0;i<inter.baris();i++){
+      for (j=0;j<inter.kolom();j++){
+        if(j!=(inter.kolom()-1)){
+          inter.setElemenKe(i,j,Math.pow(this.elemenKe(m,n),j));
+        }
+        else if(j==3){
+          n=1;
+          inter.setElemenKe(i,j,this.elemenKe(m,n));
+        }
+      }
+      m=m+1;
+      n=0;
+    }
+    inter=inter.gaussJordan();
+    return inter;
+  }
+  public Matriks cramer(){
+    int i,j,k;
+    Matriks sln= new Matriks(this.baris(),this.kolom());
+    Matriks sln2= new Matriks(this.baris(),this.kolom());
+    sln.salinMatriks(this);
+    sln2.salinMatriks(this);
+    sln.hapusLastkolom();
+    sln2.hapusLastkolom();
+
+
+    Matriks hsl=new Matriks(this.baris(),this.kolom());
+    for(i=0;i<hsl.baris();i++){
+      for(j=0;j<hsl.kolom();j++){
+        if(i==j){
+          hsl.setElemenKe(i,j,1);
+        }
+        else{
+          hsl.setElemenKe(i,j,0);
+        }
+      }
+    }
+
+    double detTot=sln.determinan();
+    double detCram;
+    double hslElemen;
+
+    for(k=0;k<sln.baris();k++){
+      for(i=0;i<sln.baris();i++){
+        for(j=0;j<sln.kolom();j++){
+          if(j==k){
+            sln.setElemenKe(i,j,this.elemenKe(i,(this.kolom()-1)));
+          }
+        }
+      }
+      detCram=sln.determinanReduksi();
+      if(detTot!=0){
+        hslElemen=detCram/detTot;
+        hsl.setElemenKe(k,(this.kolom()-1),hslElemen);
+      }
+      sln.salinMatriks(sln2);
+    }
+    return hsl;
   }
 }
