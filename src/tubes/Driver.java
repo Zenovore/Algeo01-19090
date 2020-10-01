@@ -30,7 +30,10 @@ class Driver{
         }
       }
       else if(source == 2){
-        a = Matriks.bacaMatriks(s);
+        if(menu==4){
+          a = Matriks.bacaInterpolasi(s);
+        }
+        else {a = Matriks.bacaMatriks(s);}
       }
       s = new Scanner(System.in);
 
@@ -54,6 +57,7 @@ class Driver{
         }
         else if(menu == 4){
           /* Cramer */
+          solusi = a.cramer().stringSolusiSPL("x");
         }
         else{
           System.out.println("Salah input, ayo masukin yang bener >.<");
@@ -100,11 +104,12 @@ class Driver{
       /*----4. INTERPOLASI POLINOM----*/
       else if(menu == 4){
         /* TODO: Buat interpolasi polinom */
+        System.out.printf("%f\n",a.interpolasi().gaussJordan().hitungInterpolasi(s));
       }
 
       /*----5. REGRESI LINEAR----*/
       else if(menu == 5){
-        solusi = a.regresi().stringSolusiSPL("b");
+        solusi = a.regresi().gaussJordan().stringSolusiSPL("b");
         /* TODO: Buat regresi linear */
       }
 

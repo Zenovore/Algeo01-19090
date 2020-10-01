@@ -31,7 +31,7 @@ public class Matriks {
   public static Matriks bacaMatriks(Scanner s){
     /* Baca Matriks */
     int i,j, bar,kol;
-    Matriks m;
+    Matriks m,a;
 
     System.out.printf("Masukan Baris ");
     bar = s.nextInt();
@@ -43,7 +43,11 @@ public class Matriks {
         m.setElemenKe(i, j, s.nextDouble());
       }
     }
-    return m;
+    a = new Matriks(bar,1);
+    for (i=0;i<bar;i++){
+      a.setElemenKe(i, 0, s.nextDouble());
+    }
+    return m.tambahkolom(1, a);
   }
   /**
    * Membaca matriks dari file
@@ -73,7 +77,21 @@ public class Matriks {
     s.close();
     return m;
   }
+  public static Matriks bacaInterpolasi(Scanner s){
+    /* Baca Matriks */
+    int i,j, bar;
+    Matriks m;
 
+    System.out.printf("Masukan Jumlah Titik: ");
+    bar = s.nextInt();
+    m = new Matriks(bar, 2);
+    for (i=0;i<bar;i++){
+      for (j=0;j<2;j++){
+        m.setElemenKe(i, j, s.nextDouble());
+      }
+    }
+    return m;
+  }
   /**
    * Menuliskan matriks ke stdout
    */
@@ -414,7 +432,7 @@ public class Matriks {
     return temp;
   }
 
-  public Matriks tambahKolomDepan(){
+  public Matriks tambahKolomDepan(int a){
     int i,j;
     Matriks sln=new Matriks(this.baris(),this.kolom());
     sln.salinMatriks(this);
@@ -423,7 +441,7 @@ public class Matriks {
     for(i=0;i<this.baris();i++){
       for(j=0;j<this.kolom();j++){
         if(j==0){
-          this.setElemenKe(i,j,0);
+          this.setElemenKe(i,j,a);
         }
         else{
           this.setElemenKe(i,j,sln.elemenKe(i,j-1));
@@ -458,11 +476,10 @@ public class Matriks {
     double y=0;
     double z=0;
     int i,j,k;
-    double temp,temp2;
+    double temp;
     boolean foundnot0;
     boolean token=false;
 
-    int t=0;
     z=this.elemenKe(0,0);
 
     if(z==0){
@@ -580,7 +597,7 @@ public class Matriks {
     }
 
     if(token==true){
-      this.tambahKolomDepan();
+      this.tambahKolomDepan(0);
     }
 
     return this;
@@ -792,36 +809,19 @@ public class Matriks {
     Matriks a,y;
     Matriks b = new Matriks(this.baris(),this.kolom());
     Matriks c = new Matriks(this.baris(),1);
-    this.simplify();
-    this.tulisMatriks();
     System.out.println("\n");
     c.salinMatriks(this.hapusLastkolom());
     b.salinMatriks(this);
+    b.tambahKolomDepan(1);
     b.transpose();
-    a = kali(b,this);
-    a.tulisMatriks();
-    System.out.println("\n");
+    a = kali(b,this.tambahKolomDepan(1));
     y = kali(b,c);
-    y.tulisMatriks();
-    System.out.println("\n");
     a = a.tambahkolom(1, y);
     return(a);
-  }
-  public Matriks simplify(){
-    int i,j;
-    double a;
-    for(i=0;i<this.baris();i++){
-      a = elemenKe(i,0);
-      for(j=0;j<this.kolom();j++){
-        this.setElemenKe(i, j, (this.elemenKe(i, j)/a));
-      }
-    }
-    return this;
   }
 
   public Matriks interpolasi(){
     Matriks inter=new Matriks(this.baris(),this.baris()+1);
-    Matriks hasil;
     int i,j,m,n;
 
     m=0;
@@ -832,7 +832,7 @@ public class Matriks {
         if(j!=(inter.kolom()-1)){
           inter.setElemenKe(i,j,Math.pow(this.elemenKe(m,n),j));
         }
-        else if(j==3){
+        else if(j==(inter.kolom()-1)){
           n=1;
           inter.setElemenKe(i,j,this.elemenKe(m,n));
         }
@@ -840,7 +840,6 @@ public class Matriks {
       m=m+1;
       n=0;
     }
-    inter=inter.gaussJordan();
     return inter;
   }
   public Matriks cramer(){
@@ -984,5 +983,42 @@ public class Matriks {
       }
     }
     return det;
+  }
+
+  public String tulisInterpolasi(){
+    int count = 0,i;
+    String output="";
+    boolean negatif=false;
+    output += "y = ";
+    for(i=0;i<this.baris();i++){
+      if (i != this.baris()+1 && i !=0){
+        if ((this.elemenKe(i,this.kolom()-1))<0){
+          negatif = true;
+          output += " - ";
+        }
+        else {output += " + ";}
+      }
+      if (negatif){
+        output += String.format("%f",this.elemenKe(i,this.kolom()-1)*-1);
+      }
+      else {output += String.format("%f",this.elemenKe(i,this.kolom()-1));}
+      if (count != 0){
+        output += String.format("x^%d",count);
+      }
+      count++;
+    }
+    return output;
+  }
+
+  public Double hitungInterpolasi(Scanner s){
+    double sum=0;
+    int i;
+    System.out.printf("Masukkan input x: ");
+    bar = s.nextInt();
+    for(i=0;i<this.baris();i++){
+      sum += ((Math.pow(bar,i)) * (this.elemenKe(i, this.kolom()-1)));
+      System.out.printf("%f\n",this.elemenKe(i, this.kolom()-1));
+    }
+    return sum;
   }
 }
