@@ -770,6 +770,7 @@ public class Matriks {
           }
           if(count == 1){
             sols[first] = elemenKe(i, kolom()-1);
+            useBaris[first] = i;
           }
           if(count > 1){
             sols[first] = elemenKe(i, kolom()-1);
@@ -783,15 +784,13 @@ public class Matriks {
           sb.append(String.format("%s%d = ", var, i+1));
           if(Double.isFinite(sols[i])) sb.append(df.format(sols[i]));
           else if(useBaris[i] == -1) sb.append("bebas");
-          else{
-            for(int j = i+1; j < kolom()-1; j++){
-              if(Math.abs(elemenKe(useBaris[i], j)) > 1e-10){
-                if(elemenKe(useBaris[i], j) > 0) sb.append(" - ");
-                else sb.append(" + ");
-                if(Math.abs(elemenKe(useBaris[i], j))-1 > 1e-10)
-                  sb.append(df.format(Math.abs(elemenKe(useBaris[i], j))));
-                sb.append(String.format("%s%d", var, j+1));
-              }
+          for(int j = i+1; j < kolom()-1 && useBaris[i] != -1; j++){
+            if(Math.abs(elemenKe(useBaris[i], j)) > 1e-10){
+              if(elemenKe(useBaris[i], j) > 0) sb.append(" - ");
+              else sb.append(" + ");
+              if(Math.abs(elemenKe(useBaris[i], j))-1 > 1e-10)
+                sb.append(df.format(Math.abs(elemenKe(useBaris[i], j))));
+              sb.append(String.format("%s%d", var, j+1));
             }
           }
           if(i != kolom()-2) sb.append(", ");
@@ -800,8 +799,6 @@ public class Matriks {
       else{
         sb.append("Tidak ada solusi untuk SPL\n");
       }
-      tulisMatriks();
-      System.out.println();
     }
     return sb.toString();
   }
