@@ -43,6 +43,7 @@ public class Matriks {
         m.setElemenKe(i, j, s.nextDouble());
       }
     }
+    System.out.printf("Masukan Matriks B \n");
     a = new Matriks(bar,1);
     for (i=0;i<bar;i++){
       a.setElemenKe(i, 0, s.nextDouble());
@@ -1014,7 +1015,7 @@ public class Matriks {
     bar = s.nextInt();
     for(i=0;i<this.baris();i++){
       sum += ((Math.pow(bar,i)) * (this.elemenKe(i, this.kolom()-1)));
-      System.out.printf("%f\n",this.elemenKe(i, this.kolom()-1));
+      System.out.printf("y = %f\n",this.elemenKe(i, this.kolom()-1));
     }
     return sum;
   }
