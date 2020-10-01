@@ -722,7 +722,7 @@ public class Matriks {
    * @param var string variabel / peubah x
    * @return String solusi SPL
    */
-  public String stringSolusiSPL(String var){
+  public String stringSolusiSPL(String var, int offset){
     StringBuilder sb = new StringBuilder();
     DecimalFormat df = new DecimalFormat("0", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
     df.setMaximumFractionDigits(340);
@@ -735,7 +735,7 @@ public class Matriks {
       else{
         for(int i = 0; i < baris(); i++){
           /* Tulis Solusi SPL */
-          sb.append(String.format("%s%d = ", var, i+1));
+          sb.append(String.format("%s%d = ", var, i+offset));
           sb.append(df.format(elemenKe(i, 0)));
           if(i != baris()-1) sb.append(", ");
         }
@@ -782,7 +782,7 @@ public class Matriks {
           }
         }
         for(int i = 0; i < kolom()-1; i++){
-          sb.append(String.format("%s%d = ", var, i+1));
+          sb.append(String.format("%s%d = ", var, i+offset));
           if(Double.isFinite(sols[i])) sb.append(df.format(sols[i]));
           else if(useBaris[i] == -1) sb.append("bebas");
           for(int j = i+1; j < kolom()-1 && useBaris[i] != -1; j++){
@@ -791,7 +791,7 @@ public class Matriks {
               else sb.append(" + ");
               if(Math.abs(elemenKe(useBaris[i], j))-1 > 1e-10)
                 sb.append(df.format(Math.abs(elemenKe(useBaris[i], j))));
-              sb.append(String.format("%s%d", var, j+1));
+              sb.append(String.format("%s%d", var, j+offset));
             }
           }
           if(i != kolom()-2) sb.append(", ");

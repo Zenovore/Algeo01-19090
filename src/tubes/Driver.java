@@ -47,17 +47,17 @@ class Driver{
         menu = s.nextInt();
 
         if(menu == 1){
-          solusi.append(a.gauss().stringSolusiSPL("x"));
+          solusi.append(a.gauss().stringSolusiSPL("x", 1));
         }
         else if(menu == 2){
-          solusi.append(a.solusiSPLGaussJordan().stringSolusiSPL("x"));
+          solusi.append(a.solusiSPLGaussJordan().stringSolusiSPL("x", 1));
         }
         else if(menu == 3){
-          solusi.append(a.solusiSPLinvers().stringSolusiSPL("x"));
+          solusi.append(a.solusiSPLinvers().stringSolusiSPL("x", 1));
         }
         else if(menu == 4){
           /* Cramer */
-          solusi.append(a.cramer().stringSolusiSPL("x"));
+          solusi.append(a.cramer().stringSolusiSPL("x", 1));
         }
         else{
           System.out.println("Salah input, ayo masukin yang bener >.<");
@@ -112,7 +112,7 @@ class Driver{
 
       /*----5. REGRESI LINEAR----*/
       else if(menu == 5){
-        solusi.append(a.regresi().gaussJordan().stringSolusiSPL("b"));
+        solusi.append(a.regresi().gaussJordan().stringSolusiSPL("b", 0));
         /* TODO: Buat regresi linear */
       }
 
