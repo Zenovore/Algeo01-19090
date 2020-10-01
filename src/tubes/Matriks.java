@@ -818,6 +818,7 @@ public class Matriks {
     }
     return this;
   }
+
   public Matriks interpolasi(){
     Matriks inter=new Matriks(this.baris(),this.baris()+1);
     Matriks hasil;
@@ -881,10 +882,14 @@ public class Matriks {
         hslElemen=detCram/detTot;
         hsl.setElemenKe(k,(this.kolom()-1),hslElemen);
       }
+      else{
+        hsl.setElemenKe(k,(this.kolom()-1),Double.NaN);
+      }
       sln.salinMatriks(sln2);
     }
     return hsl;
   }
+  
   public double determinanReduksi(){
     int R=this.baris();
     int C=this.kolom();
