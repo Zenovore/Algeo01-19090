@@ -15,7 +15,7 @@ class Driver{
     menu = s.nextInt();
     s.nextLine();
     if(0 < menu && menu < 6){ /* First input valid */
-      String solusi = "";
+      StringBuilder solusi = new StringBuilder();
       System.out.printf("\n1.Input File \n2.Input dari Keyboard \nMasukan Input ");
       source = s.nextInt();
       s.nextLine();
@@ -47,17 +47,17 @@ class Driver{
         menu = s.nextInt();
 
         if(menu == 1){
-          solusi = a.gauss().stringSolusiSPL("x");
+          solusi.append(a.gauss().stringSolusiSPL("x"));
         }
         else if(menu == 2){
-          solusi = a.solusiSPLGaussJordan().stringSolusiSPL("x");
+          solusi.append(a.solusiSPLGaussJordan().stringSolusiSPL("x"));
         }
         else if(menu == 3){
-          solusi = a.solusiSPLinvers().stringSolusiSPL("x");
+          solusi.append(a.solusiSPLinvers().stringSolusiSPL("x"));
         }
         else if(menu == 4){
           /* Cramer */
-          solusi = a.cramer().stringSolusiSPL("x");
+          solusi.append(a.cramer().stringSolusiSPL("x"));
         }
         else{
           System.out.println("Salah input, ayo masukin yang bener >.<");
@@ -76,7 +76,7 @@ class Driver{
           a.gauss();
         }
         else if(menu == 2){
-          solusi = String.format("%.2f", a.determinan());
+          solusi.append(String.format("%.2f", a.determinan()));
         }
         else{
           System.out.println("\nSalah input, ayo masukin yang bener >.<");
@@ -91,10 +91,10 @@ class Driver{
         menu = s.nextInt();
         if(menu == 1){
           /* OBE */
-          solusi = a.tambahkolom(a.kolom(), a.identitas(a.kolom())).gaussJordan().hapuskolom(a.baris()).stringOfMatriks();
+          solusi.append(a.tambahkolom(a.kolom(), a.identitas(a.kolom())).gaussJordan().hapuskolom(a.baris()).stringOfMatriks());
         }
         else if(menu == 2){
-          solusi = a.invers().stringOfMatriks();
+          solusi.append(a.invers().stringOfMatriks());
         }
         else{
           System.out.println("Salah input, ayo masukin yang bener >.<");
@@ -104,12 +104,15 @@ class Driver{
       /*----4. INTERPOLASI POLINOM----*/
       else if(menu == 4){
         /* TODO: Buat interpolasi polinom */
-        System.out.printf("%f\n",a.interpolasi().gaussJordan().hitungInterpolasi(s));
+        a = a.interpolasi().gaussJordan();
+        solusi.append("\n");
+        solusi.append(a.tulisInterpolasi());
+        solusi.append(String.format("%f\n", a.hitungInterpolasi(s)));
       }
 
       /*----5. REGRESI LINEAR----*/
       else if(menu == 5){
-        solusi = a.regresi().gaussJordan().stringSolusiSPL("b");
+        solusi.append(a.regresi().gaussJordan().stringSolusiSPL("b"));
         /* TODO: Buat regresi linear */
       }
 
@@ -124,11 +127,11 @@ class Driver{
         String nama = s.nextLine();
         try{
           FileWriter w = new FileWriter(nama);
-          w.write(solusi);
+          w.write(solusi.toString());
           w.close();
         }
         catch(IOException e){
-          System.out.println(solusi);
+          System.out.println(solusi.toString());
         }
       }
     }
