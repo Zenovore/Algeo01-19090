@@ -367,9 +367,7 @@ public class Matriks {
     }
     return temp;
   }
-  // public Matriks invers2(){
 
-  // }
   public Matriks tambahkolom(int a,Matriks b){
     int i,j;
     Matriks temp = new Matriks(this.baris(),this.kolom()+a);
@@ -794,7 +792,7 @@ public class Matriks {
               sb.append(String.format("%s%d", var, j+offset));
             }
           }
-          if(i != kolom()-2) sb.append(", ");
+          if(i != kolom()-2) sb.append("\n");
         }
       }
       else{

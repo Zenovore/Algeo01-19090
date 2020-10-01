@@ -73,7 +73,7 @@ class Driver{
         menu = s.nextInt();
         if(menu == 1){
           /* Reduksi baris */
-          a.gauss();
+          solusi.append(String.format("%.2f", a.determinanReduksi()));
         }
         else if(menu == 2){
           solusi.append(String.format("%.2f", a.determinan()));
