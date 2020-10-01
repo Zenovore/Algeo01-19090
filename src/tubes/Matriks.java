@@ -26,29 +26,23 @@ public class Matriks {
   /* Operasi Baca-Tulis */
   /**
    * Membaca matriks dari stdin
+   * @param r jumlah baris
+   * @param c jumlah kolom
+   * @param s scanner sumber pembacaan
    * @return Matriks hasil pembacaan
    */
-  public static Matriks bacaMatriks(Scanner s){
+  public static Matriks bacaMatriks(int r, int c, Scanner s){
     /* Baca Matriks */
-    int i,j, bar,kol;
-    Matriks m,a;
+    int i,j;
+    Matriks m;
 
-    System.out.printf("Masukan Baris ");
-    bar = s.nextInt();
-    System.out.printf("Masukan Kolom ");
-    kol = s.nextInt();
-    m = new Matriks(bar, kol);
-    for (i=0;i<bar;i++){
-      for (j=0;j<kol;j++){
+    m = new Matriks(r, c);
+    for (i=0;i<r;i++){
+      for (j=0;j<c;j++){
         m.setElemenKe(i, j, s.nextDouble());
       }
     }
-    System.out.printf("Masukan Matriks B \n");
-    a = new Matriks(bar,1);
-    for (i=0;i<bar;i++){
-      a.setElemenKe(i, 0, s.nextDouble());
-    }
-    return m.tambahkolom(1, a);
+    return m;
   }
   /**
    * Membaca matriks dari file
@@ -746,10 +740,10 @@ public class Matriks {
       boolean punyaSolusi = true;
       boolean barisNol = true;
       int count, first;
-      for(int i = 0; i < kolom()-1; i++){
-        barisNol &= Math.abs(elemenKe(baris()-1, i)) < 1e-10;
+      for(int i = 0; i < kolom()-1 && barisNol; i++){
+        barisNol = barisNol && Math.abs(elemenKe(baris()-1, i)) < 1e-10;
       }
-      punyaSolusi = (barisNol && Math.abs(elemenKe(baris()-1, kolom()-1)) < 1e-10) || (!barisNol && Math.abs(elemenKe(baris()-1, kolom()-1)) > 1e-10);
+      punyaSolusi = !(!barisNol && Math.abs(elemenKe(baris()-1, kolom()-1)) > 1e-10);
       if(punyaSolusi){
         /* loop dari baris akhir, back-substitution */
         double sols[] = new double[kolom()-1];
@@ -794,7 +788,7 @@ public class Matriks {
               sb.append(String.format("%s%d", var, j+offset));
             }
           }
-          if(i != kolom()-2) sb.append(", ");
+          if(i != kolom()-2) sb.append("\n");
         }
       }
       else{
