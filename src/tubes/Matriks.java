@@ -847,6 +847,7 @@ public class Matriks {
     int i,j,k;
     Matriks sln= new Matriks(this.baris(),this.kolom());
     Matriks sln2= new Matriks(this.baris(),this.kolom());
+    Matriks nan= new Matriks(this.baris(),this.kolom());
     sln.salinMatriks(this);
     sln2.salinMatriks(this);
     sln.hapusLastkolom();
@@ -865,29 +866,36 @@ public class Matriks {
       }
     }
 
+    for(i=0;i<hsl.baris();i++){
+      for(j=0;j<hsl.kolom();j++){
+       nan.setElemenKe(i,j,Double.NaN);
+      }
+    }
+
+
     double detTot=sln.determinan();
     double detCram;
     double hslElemen;
 
-    for(k=0;k<sln.baris();k++){
-      for(i=0;i<sln.baris();i++){
-        for(j=0;j<sln.kolom();j++){
-          if(j==k){
-            sln.setElemenKe(i,j,this.elemenKe(i,(this.kolom()-1)));
+    if(detTot !=0 && sln.isKotak() ){
+      for(k=0;k<sln.baris();k++){
+        for(i=0;i<sln.baris();i++){
+          for(j=0;j<sln.kolom();j++){
+            if(j==k){
+              sln.setElemenKe(i,j,this.elemenKe(i,(this.kolom()-1)));
+            }
           }
         }
-      }
-      detCram=sln.determinanReduksi();
-      if(detTot!=0){
+        detCram=sln.determinanReduksi();
         hslElemen=detCram/detTot;
         hsl.setElemenKe(k,(this.kolom()-1),hslElemen);
+        sln.salinMatriks(sln2);
       }
-      else{
-        hsl.setElemenKe(k,(this.kolom()-1),Double.NaN);
-      }
-      sln.salinMatriks(sln2);
+      return hsl;
     }
-    return hsl;
+    else{
+      return nan;
+    }
   }
   
   public double determinanReduksi(){

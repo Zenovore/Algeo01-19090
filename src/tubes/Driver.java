@@ -53,7 +53,7 @@ class Driver{
           solusi = a.solusiSPLinvers().stringSolusiSPL("x");
         }
         else if(menu == 4){
-          /* Cramer */
+          solusi = a.cramer().stringSolusiSPL("x");
         }
         else{
           System.out.println("Salah input, ayo masukin yang bener >.<");
