@@ -724,7 +724,7 @@ public class Matriks {
           /* Tulis Solusi SPL */
           sb.append(String.format("%s%d = ", var, i+offset));
           sb.append(df.format(elemenKe(i, 0)));
-          if(i != baris()-1) sb.append(", ");
+          if(i != baris()-1) sb.append("\n");
         }
       }
     }
