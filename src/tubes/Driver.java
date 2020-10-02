@@ -36,7 +36,7 @@ class Driver{
         if(menu==4){
           a = Matriks.bacaInterpolasi(s);
         }
-        else if (menu==2 || menu ==3) {
+        else if (menu==2 || menu == 3) {
           System.out.printf("Masukkan n: ");
           bar = s.nextInt();
           a = Matriks.bacaMatriks(bar, bar, s);
@@ -104,10 +104,10 @@ class Driver{
         menu = s.nextInt();
         if(menu == 1){
           /* Reduksi baris */
-          solusi.append(String.format("%.2f", a.determinanReduksi()));
+          solusi.append(String.format("%.64f", a.determinanReduksi()));
         }
         else if(menu == 2){
-          solusi.append(String.format("%.2f", a.determinan()));
+          solusi.append(String.format("%.64f", a.determinan()));
         }
         else{
           System.out.println("\nSalah input, ayo masukin yang bener >.<");
@@ -117,7 +117,7 @@ class Driver{
       /*---- 3. INVERS ----*/
       else if(menu == 3){
         System.out.println("1. Metode OBE");
-        System.out.println("2. Metode Adjoin");
+        System.out.println("2. Metode Adjoin (Lebih baik digunakan ketika elemen matriks bukan pecahan)");
         System.out.printf("Masukkan input: ");
         menu = s.nextInt();
         if(menu == 1){

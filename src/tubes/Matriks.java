@@ -1023,7 +1023,10 @@ public String tulisRegresi(){
         negatif = true;
         output += " - ";
       }
-      else {output += " + ";}
+      else {
+        output += " + ";
+        negatif = false;
+      }
     }
     if (negatif){
       output += String.format("%f",this.elemenKe(i,this.kolom()-1)*-1);
