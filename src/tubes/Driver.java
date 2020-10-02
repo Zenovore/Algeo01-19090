@@ -23,6 +23,8 @@ class Driver{
         f = s.nextLine();
         try{
           a = Matriks.bacaMatriks(f);
+          a.tulisMatriks();
+          System.out.println();
         }
         catch(FileNotFoundException e){
           s.close();
@@ -126,12 +128,10 @@ class Driver{
         solusi.append(a.regresi().gaussJordan().stringSolusiSPL("b", 0));
       }
 
-      System.out.println("Mau dikeluarin disini (1) ato di file(2)?");
+      System.out.println(solusi.toString());
+      System.out.println("Mau dikeluarin di file juga? (1 = yes)");
       menu = s.nextInt();
       if(menu == 1){
-        System.out.println(solusi);
-      }
-      else if(menu == 2){
         System.out.print("Nama file output: ");
         s.nextLine();
         String nama = s.nextLine();
