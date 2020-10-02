@@ -613,7 +613,7 @@ public class Matriks {
     lastFinished = 0;
     while(lastFinished < baris() && kolomOperasi < kolom()){
       k = barisOperasi;
-      for(j = lastFinished; j < baris(); j++){
+      for(j = lastFinished; j < baris() && barisOperasi < kolom(); j++){
         if(Math.abs(elemenKe(j, barisOperasi)) > Math.abs(elemenKe(k, barisOperasi))) k = j;
       }
       if(Math.abs(elemenKe(k, kolomOperasi)) > epsilon){
