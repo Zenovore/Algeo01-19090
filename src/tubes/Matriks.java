@@ -391,21 +391,6 @@ public class Matriks {
     }
     return temp;
   }
-  public Matriks tambahkolomdepan(int a,Matriks b){
-    int i,j;
-    Matriks temp = new Matriks(this.baris(),this.kolom()+a);
-    for(i=0;i<this.baris();i++){
-      for(j=0;j<this.kolom()+a;j++){
-        if (j<a){
-          temp.setElemenKe(i, j, b.elemenKe(i, j));
-        }
-        else {
-          temp.setElemenKe(i, j, this.elemenKe(i, j-a));
-        } 
-      }
-    }
-    return temp; 
-  }
   public Matriks kolomElemenSama(int a,int b){
     Matriks temp = new Matriks(a,1);
     int i;
@@ -611,16 +596,16 @@ public class Matriks {
    * @return Matriks solusi SPL
    */
   public Matriks solusiSPLinvers(){
-    Matriks c, t;
+    Matriks c, nan;
     c = this.hapusLastkolom();
-    t = this;
-    if(!t.isKotak()){
-      if(t.baris() > t.kolom()){
-        int size = t.baris() - t.kolom();
-        t = t.tambahkolom(size, Matriks.nol(baris(), size));
+    if(!isKotak()){
+      nan = new Matriks(baris(), 1);
+      for(int i = 0; i < this.baris(); i++){
+        nan.setElemenKe(i, 0, Double.NaN);
       }
+      return nan;
     }
-    return Matriks.kali(t.invers(), c);
+    return Matriks.kali(this.invers(), c);
   }
 
   /**
