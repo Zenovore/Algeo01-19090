@@ -11,7 +11,7 @@ public class Matriks {
   private double[][] mat;
   private int bar, kol;
   private int swaps = 0;
-  private final double epsilon = 1e-15;
+  private final double epsilon = 1e-10;
 
   /**
    * Membuat matriks baru dengan ukuran bar x kol
@@ -338,14 +338,16 @@ public class Matriks {
    * @return Matriks yang sudah diinverse
    */
   public Matriks invers(){
-    if(Math.abs(determinanReduksi()) < epsilon){
+    Matriks m = new Matriks(baris(), kolom());
+    m.salinMatriks(this);
+    if(Math.abs(m.determinanReduksi()) < epsilon){
       for(int i = 0; i < baris(); i++){
         for(int j = 0; j < kolom(); j++){
           setElemenKe(i, j, Double.NaN);
         }
       }
     }
-    else this.tambahkolom(this.kolom(), this.identitas(this.kolom())).gaussJordan().hapuskolom(this.baris());
+    else return this.tambahkolom(this.kolom(), this.identitas(this.kolom())).gaussJordan().hapuskolom(this.baris());
     return this;
   }
   public Matriks identitas(int a){
@@ -726,7 +728,7 @@ public class Matriks {
       /* Menggunakan Invers */
       if(!Double.isFinite(elemenKe(0, 0))){
         /* Tidak ada solusi */
-        sb.append("Tidak ada solusi untuk SPL");
+        sb.append("Solusi tidak dapat ditentukan");
       }
       else{
         for(int i = 0; i < baris(); i++){
@@ -850,10 +852,10 @@ public class Matriks {
 
 
     double detTot = sln.determinanReduksi();
-    double detCram;
-    double hslElemen;
+    double detCram = 0;
+    double hslElemen = 0;
 
-    if(Math.abs(detTot) < epsilon && sln.isKotak() ){
+    if(Math.abs(detTot) > epsilon && sln.isKotak()){
       for(k=0;k<sln.kolom();k++){
         sln.salinMatriks(sln2);
         sln.tukarKolom(ambilKolomKeN(kolom()-1), k);
