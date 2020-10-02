@@ -999,7 +999,44 @@ public class Matriks {
     bar = s.nextInt();
     for(i=0;i<this.baris();i++){
       sum += ((Math.pow(bar,i)) * (this.elemenKe(i, this.kolom()-1)));
-      System.out.printf("y = %f\n",this.elemenKe(i, this.kolom()-1));
+    }
+    return sum;
+  }
+
+public String tulisRegresi(){
+  int count = 0,i;
+  String output="";
+  boolean negatif=false;
+  output += "y = ";
+  for(i=0;i<this.baris();i++){
+    if (i != this.baris()+1 && i !=0){
+      if ((this.elemenKe(i,this.kolom()-1))<0){
+        negatif = true;
+        output += " - ";
+      }
+      else {output += " + ";}
+    }
+    if (negatif){
+      output += String.format("%f",this.elemenKe(i,this.kolom()-1)*-1);
+    }
+    else {output += String.format("%f",this.elemenKe(i,this.kolom()-1));}
+    if (count != 0){
+      output += String.format("x%d",count);
+    }
+    count++;
+  }
+  return output;
+  }
+  public Double hitungRegresi(Scanner s){
+    double sum=0;
+    int i;
+    System.out.printf("Masukkan input x: ");
+    bar = s.nextInt();
+    for(i=0;i<this.baris();i++){
+      if (i!=0){
+      sum += bar * (this.elemenKe(i, this.kolom()-1));
+      }
+      else {sum += this.elemenKe(i, this.kolom()-1);}
     }
     return sum;
   }

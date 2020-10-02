@@ -40,6 +40,14 @@ class Driver{
           bar = s.nextInt();
           a = Matriks.bacaMatriks(bar, bar, s);
         }
+        else if (menu ==5){
+          System.out.printf("Masukkan Jumlah Peubah X: ");
+          kolom = s.nextInt();
+          System.out.printf("Masukkan Jumlah Data: ");
+          bar = s.nextInt();
+          a = Matriks.bacaMatriks(bar, kolom+1, s);
+
+        }
         else{
           System.out.printf("Masukkan Baris: ");
           bar = s.nextInt();
@@ -107,7 +115,7 @@ class Driver{
           /* OBE */
           solusi.append(a.invers().stringOfMatriks());
         }
-        else if(menu == 2){
+        else if(menu == 2){ /* Lebih baik digunakan ketika elemen matriks bukan pecahan */
           solusi.append(a.invers().stringOfMatriks());
         }
         else{
@@ -125,7 +133,11 @@ class Driver{
 
       /*----5. REGRESI LINEAR----*/
       else if(menu == 5){
-        solusi.append(a.regresi().gaussJordan().stringSolusiSPL("b", 0));
+        a = a.regresi().gaussJordan();
+        solusi.append("\n");
+        solusi.append(a.tulisRegresi());
+        solusi.append("\n");
+        solusi.append(String.format("y = %f\n", a.hitungRegresi(s)));
       }
 
       System.out.println(solusi.toString());
