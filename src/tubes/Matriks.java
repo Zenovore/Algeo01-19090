@@ -11,6 +11,7 @@ public class Matriks {
   private double[][] mat;
   private int bar, kol;
   private int swaps = 0;
+  private final double epsilon = 1e-30;
 
   /**
    * Membuat matriks baru dengan ukuran bar x kol
@@ -614,7 +615,7 @@ public class Matriks {
       for(j = lastFinished; j < baris(); j++){
         if(Math.abs(elemenKe(j, barisOperasi)) > Math.abs(elemenKe(k, barisOperasi))) k = j;
       }
-      if(Math.abs(elemenKe(k, kolomOperasi)) > 1e-10){
+      if(Math.abs(elemenKe(k, kolomOperasi)) > epsilon){
         if(barisOperasi != k) tukarBaris(barisOperasi, k);
         double mult = elemenKe(barisOperasi, kolomOperasi);
         for(i = 0; i < kolom(); i++){
@@ -739,9 +740,9 @@ public class Matriks {
       boolean barisNol = true;
       int count, first;
       for(int i = 0; i < kolom()-1 && barisNol; i++){
-        barisNol = barisNol && Math.abs(elemenKe(baris()-1, i)) < 1e-10;
+        barisNol = barisNol && Math.abs(elemenKe(baris()-1, i)) < epsilon;
       }
-      punyaSolusi = !(!barisNol && Math.abs(elemenKe(baris()-1, kolom()-1)) > 1e-10);
+      punyaSolusi = (barisNol && Math.abs(elemenKe(baris()-1, kolom()-1)) < epsilon) || (!barisNol);
       if(punyaSolusi){
         /* loop dari baris akhir, back-substitution */
         double sols[] = new double[kolom()-1];
@@ -756,7 +757,7 @@ public class Matriks {
           count = 0;
           first = 0;
           for(int j = kolom()-2; j >= 0; j--){
-            if(Math.abs(elemenKe(i, j)) > 1e-10){
+            if(Math.abs(elemenKe(i, j)) > epsilon){
               count++;
               first = j;
             }
@@ -778,10 +779,10 @@ public class Matriks {
           if(Double.isFinite(sols[i])) sb.append(df.format(sols[i]));
           else if(useBaris[i] == -1) sb.append("bebas");
           for(int j = i+1; j < kolom()-1 && useBaris[i] != -1; j++){
-            if(Math.abs(elemenKe(useBaris[i], j)) > 1e-10){
+            if(Math.abs(elemenKe(useBaris[i], j)) > epsilon){
               if(elemenKe(useBaris[i], j) > 0) sb.append(" - ");
               else sb.append(" + ");
-              if(Math.abs(elemenKe(useBaris[i], j))-1 > 1e-10)
+              if(Math.abs(elemenKe(useBaris[i], j))-1 > epsilon)
                 sb.append(df.format(Math.abs(elemenKe(useBaris[i], j))));
               sb.append(String.format("%s%d", var, j+offset));
             }
