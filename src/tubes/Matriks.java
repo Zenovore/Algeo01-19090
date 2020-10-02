@@ -365,6 +365,16 @@ public class Matriks {
     }
     return temp;
   }
+  public static Matriks nol(int r, int c){
+    int i, j;
+    Matriks temp = new Matriks(r, c);
+    for(i = 0; i < r; i++){
+      for(j = 0; j < c; j++){
+        temp.setElemenKe(i, j, 0);
+      }
+    }
+    return temp;
+  }
 
   public Matriks tambahkolom(int a,Matriks b){
     int i,j;
@@ -445,10 +455,7 @@ public class Matriks {
         }
       }
     }
-
-
     return this;
-
   }
 
   public Matriks hapusKolomMe(){
@@ -467,136 +474,42 @@ public class Matriks {
    * @return Matriks eselon baris
    */
   public Matriks gauss(){
-    int R=this.baris();
-    int C=this.kolom();
-    double x=0;
-    double y=0;
-    double z=0;
-    int i,j,k;
-    double temp;
-    boolean foundnot0;
-    boolean token=false;
-
-    z=this.elemenKe(0,0);
-
-    if(z==0){
-      foundnot0=false;
-      int h=0;
-      while(foundnot0==false && h<R){
-        if(this.elemenKe(h,0)!=0){
-          foundnot0=true;
-        }
-        else{
-          h=h+1;
-        }
+    /* Implementasi: metode Gauss, menggunakan pivot */
+    /* Cari elemen x terbesar tiap kolom, misal i, lalu tukar baris ke-i dengan
+     * baris dengan baris berisi x */
+    int i, j, k;
+    int kolomOperasi, barisOperasi, lastFinished;
+    kolomOperasi = 0;
+    barisOperasi = 0;
+    lastFinished = 0;
+    while(lastFinished < baris() && kolomOperasi < kolom()){
+      k = barisOperasi;
+      for(j = lastFinished; j < baris() && barisOperasi < kolom(); j++){
+        if(Math.abs(elemenKe(j, barisOperasi)) > Math.abs(elemenKe(k, barisOperasi))) k = j;
       }
-  
-      if(foundnot0==true){
-        for(j=0;j<C;j++){
-          temp=this.elemenKe(0,j);
-          this.setElemenKe(0,j,this.elemenKe(h,j));
-          this.setElemenKe(h,j,temp);
+      if(Math.abs(elemenKe(k, kolomOperasi)) > epsilon){
+        if(barisOperasi != k) tukarBaris(barisOperasi, k);
+        double mult = elemenKe(barisOperasi, kolomOperasi);
+        for(i = 0; i < kolom(); i++){
+          setElemenKe(barisOperasi, i, elemenKe(barisOperasi, i)/mult);
         }
-        z=this.elemenKe(0,0);
-      }
-      else if(foundnot0==false){
-        this.hapusKolomMe();
-        C=C-1;
-        token=true;
-        z=this.elemenKe(0,0);
-        
-      }
-    }
-
-    for(j=0;j<C;j++){
-      this.setElemenKe(0,j,(this.elemenKe(0,j)/z));
-    }
-
-    for(k=0;k<(R);k++){
-      for(i=(k+1);i<R;i++){
-        x=this.elemenKe(i,k);
-        for(j=0;j<C;j++){
-          this.setElemenKe(i,j,(this.elemenKe(i,j)-this.elemenKe(k,j)*x));
-        }
-      }
-
-      for(i=0;i<R;i++){
-        boolean found=false;
-        j=0;
-        while(!found && j<C){
-          if(this.elemenKe(i,j)!=0){
-            y=this.elemenKe(i,j);
-            found=true;
-          }
-          else{
-            j=j+1;
+        for(i = barisOperasi+1; i < baris(); i++){
+          mult = elemenKe(i, kolomOperasi)/elemenKe(barisOperasi, kolomOperasi);
+          if(Double.isFinite(mult)){
+            for(j = 0; j < kolom(); j++){
+              setElemenKe(i, j, elemenKe(i, j) - elemenKe(barisOperasi, j)*mult);
+            }
           }
         }
-
-        for(j=0;j<C;j++){
-          this.setElemenKe(i,j,(this.elemenKe(i,j)/y));
-        }
+        lastFinished++;
+        kolomOperasi++;
+      }
+      barisOperasi++;
+      if(barisOperasi >= baris()){
+        barisOperasi = lastFinished;
+        kolomOperasi++;
       }
     }
-
-    for (i=0;i<R;i++){
-      for(j=0;j<C;j++){
-        if (this.elemenKe(i,j)==-0.00){
-          this.setElemenKe(i,j,0.00);
-        }
-      }
-    }
-
-    int countsama=0;
-    for(k=0;k<R;k++){
-      for(i=k+1;i<R;i++){
-       for(j=0;j<C;j++){
-         if(this.elemenKe(i,j)==this.elemenKe(k,j)){
-            countsama=countsama+1;
-         }
-       }
-       if(countsama==C){
-         for(j=0;j<C;j++){
-           this.setElemenKe(i,j,0);
-         }
-       }
-       countsama=0;
-      } 
-    }
-
-    // sorting 0
-
-    int min;
-    int idxmin=0;
-    foundnot0=false;
-    int count0=0;
-    for(k=0;k<(this.baris()-1);k++){
-      min=99;
-      for(i=(k+1);i<this.baris();i++){
-        j=0;
-        while(!foundnot0 && j<this.kolom()){
-          if(this.elemenKe(i,j)==0){
-            count0=count0+1;
-            j=j+1;
-          }
-          else{
-            foundnot0=true;
-          }
-        }
-        if(count0<min){
-          min=count0;
-          idxmin=i;
-        }
-        count0=0;
-        foundnot0=false;
-      }
-      this.tukarBaris(idxmin,(k+1));
-    }
-
-    if(token==true){
-      this.tambahKolomDepan(0);
-    }
-
     return this;
   }
 
@@ -643,7 +556,6 @@ public class Matriks {
         kolomOperasi++;
       }
     }
-    System.out.println();
     return this;
   }
 
@@ -699,9 +611,16 @@ public class Matriks {
    * @return Matriks solusi SPL
    */
   public Matriks solusiSPLinvers(){
-    Matriks c;
+    Matriks c, t;
     c = this.hapusLastkolom();
-    return Matriks.kali(this.invers(), c);
+    t = this;
+    if(!t.isKotak()){
+      if(t.baris() > t.kolom()){
+        int size = t.baris() - t.kolom();
+        t = t.tambahkolom(size, Matriks.nol(baris(), size));
+      }
+    }
+    return Matriks.kali(t.invers(), c);
   }
 
   /**
@@ -711,6 +630,21 @@ public class Matriks {
   public Matriks solusiSPLGaussJordan(){
     this.gaussJordan();
     return this;
+  }
+
+  public Matriks solusiSPLGauss(){
+    return this.gauss();
+  }
+
+  public Matriks solusiSPLCramer(){
+    Matriks t = this;
+    if(!this.isKotak()){
+      if(this.baris() > this.kolom()){
+        int size = this.baris() - this.kolom();
+        t = this.tambahkolom(size, Matriks.nol(baris(), size));
+      }
+    }
+    return t.cramer();
   }
 
   /**
@@ -744,10 +678,14 @@ public class Matriks {
       boolean punyaSolusi = true;
       boolean barisNol = true;
       int count, first;
-      for(int i = 0; i < kolom()-1 && barisNol; i++){
-        barisNol = barisNol && Math.abs(elemenKe(baris()-1, i)) < epsilon;
+      int j = baris()-1;
+      while(barisNol && j > 0 && punyaSolusi){
+        for(int i = 0; i < kolom()-1 && barisNol; i++){
+          barisNol = barisNol && Math.abs(elemenKe(j, i)) < epsilon;
+        }
+        punyaSolusi = (barisNol && Math.abs(elemenKe(j, kolom()-1)) < epsilon) || (!barisNol);
+        j--;
       }
-      punyaSolusi = (barisNol && Math.abs(elemenKe(baris()-1, kolom()-1)) < epsilon) || (!barisNol);
       if(punyaSolusi){
         /* loop dari baris akhir, back-substitution */
         double sols[] = new double[kolom()-1];
@@ -761,7 +699,7 @@ public class Matriks {
           // kalau masih ada, parametrik
           count = 0;
           first = 0;
-          for(int j = kolom()-2; j >= 0; j--){
+          for(j = kolom()-2; j >= 0; j--){
             if(Math.abs(elemenKe(i, j)) > epsilon){
               count++;
               first = j;
@@ -773,8 +711,8 @@ public class Matriks {
           }
           if(count > 1){
             sols[first] = elemenKe(i, kolom()-1);
-            for(int j = first+1; j < kolom()-1; j++){
-              if(Double.isFinite(sols[j])) sols[first] -= sols[j] * elemenKe(i, j);
+            for(j = first+1; j < kolom()-1; j++){
+              if(Double.isFinite(sols[j]) && useBaris[j] == -1) sols[first] -= sols[j] * elemenKe(i, j);
             }
             useBaris[first] = i;
           }
@@ -783,8 +721,8 @@ public class Matriks {
           sb.append(String.format("%s%d = ", var, i+offset));
           if(Double.isFinite(sols[i])) sb.append(df.format(sols[i]));
           else if(useBaris[i] == -1) sb.append("bebas");
-          for(int j = i+1; j < kolom()-1; j++){
-            if(useBaris[i] != -1 && Math.abs(elemenKe(useBaris[i], j)) > epsilon && !Double.isFinite(sols[j])){
+          for(j = i+1; j < kolom()-1; j++){
+            if(useBaris[i] != -1 && Math.abs(elemenKe(useBaris[i], j)) > epsilon){
               if(elemenKe(useBaris[i], j) > 0) sb.append(" - ");
               else sb.append(" + ");
               if(Math.abs(elemenKe(useBaris[i], j))-1 > epsilon)
