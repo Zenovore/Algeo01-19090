@@ -470,25 +470,23 @@ public class Matriks {
     while(lastFinished < baris() && kolomOperasi < kolom()){
       k = barisOperasi;
       for(j = lastFinished; j < baris() && barisOperasi < kolom(); j++){
-        if(Math.abs(elemenKe(j, barisOperasi)) > Math.abs(elemenKe(k, barisOperasi))) k = j;
+        if(Math.abs(elemenKe(j, barisOperasi)) > Math.abs(elemenKe(k, barisOperasi)) && Math.abs(elemenKe(j, barisOperasi)) > epsilon) k = j;
       }
-      if(Math.abs(elemenKe(k, kolomOperasi)) > epsilon){
-        if(barisOperasi != k) tukarBaris(barisOperasi, k);
-        double mult = elemenKe(barisOperasi, kolomOperasi);
-        for(i = 0; i < kolom(); i++){
-          setElemenKe(barisOperasi, i, elemenKe(barisOperasi, i)/mult);
-        }
-        for(i = barisOperasi+1; i < baris(); i++){
-          mult = elemenKe(i, kolomOperasi)/elemenKe(barisOperasi, kolomOperasi);
-          if(Double.isFinite(mult)){
-            for(j = 0; j < kolom(); j++){
-              setElemenKe(i, j, elemenKe(i, j) - elemenKe(barisOperasi, j)*mult);
-            }
+      if(barisOperasi != k) tukarBaris(barisOperasi, k);
+      double mult = elemenKe(barisOperasi, kolomOperasi);
+      for(i = 0; i < kolom(); i++){
+        setElemenKe(barisOperasi, i, elemenKe(barisOperasi, i)/mult);
+      }
+      for(i = barisOperasi+1; i < baris(); i++){
+        mult = elemenKe(i, kolomOperasi)/elemenKe(barisOperasi, kolomOperasi);
+        if(Double.isFinite(mult)){
+          for(j = 0; j < kolom(); j++){
+            setElemenKe(i, j, elemenKe(i, j) - elemenKe(barisOperasi, j)*mult);
           }
         }
-        lastFinished++;
-        kolomOperasi++;
       }
+      lastFinished++;
+      kolomOperasi++;
       barisOperasi++;
       if(barisOperasi >= baris()){
         barisOperasi = lastFinished;
