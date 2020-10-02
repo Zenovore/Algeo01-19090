@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.Scanner;
 class Driver{
   public static void main(String[] args){
-    int menu, source;
+    int menu, source,bar, kolom;
     Matriks a = new Matriks(0, 0);
     String f;
     Scanner s = new Scanner(System.in);
@@ -33,7 +33,19 @@ class Driver{
         if(menu==4){
           a = Matriks.bacaInterpolasi(s);
         }
-        else {a = Matriks.bacaMatriks(s);}
+        else if (menu==2 || menu ==3) {
+          System.out.printf("Masukkan Baris: ");
+          bar = s.nextInt();
+          a = Matriks.bacaMatriks(bar, bar, s);
+        }
+        else{
+          System.out.printf("Masukkan Baris: ");
+          bar = s.nextInt();
+          System.out.printf("Masukkan Kolom: ");
+          kolom = s.nextInt();
+          a = Matriks.bacaMatriks(bar,kolom,s);
+        }
+
       }
       s = new Scanner(System.in);
 
