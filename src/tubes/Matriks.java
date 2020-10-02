@@ -622,12 +622,13 @@ public class Matriks {
   public Matriks solusiSPLCramer(){
     Matriks t = this;
     if(!this.isKotak()){
-      if(this.baris() > this.kolom()){
-        int size = this.baris() - this.kolom();
-        t = this.tambahkolom(size, Matriks.nol(baris(), size));
+      t = new Matriks(baris(), 1);
+      for(int i = 0; i < baris(); i++){
+        t.setElemenKe(i, 0, Double.NaN);
       }
+      return t;
     }
-    return t.cramer();
+    else return t.cramer();
   }
 
   /**
