@@ -79,7 +79,7 @@ class Driver{
           solusi.append(a.solusiSPLGaussJordan().stringSolusiSPL("x", 1));
         }
         else if(menu == 3){
-          if (a.determinan()==0){
+          if (a.determinan()==0 ||(a.baris()>a.kolom())){
             solusi.append("Tidak ada Solusi SPL");
           }
           else {
@@ -88,7 +88,12 @@ class Driver{
         }
         else if(menu == 4){
           /* Cramer */
-          solusi.append(a.cramer().stringSolusiSPL("x", 1));
+          if ((a.baris()>a.kolom()) || a.determinan()==0){
+            System.out.println("Tidak ada Solusi SPL");
+          }
+          else {
+            solusi.append(a.cramer().stringSolusiSPL("x", 1));
+          }
         }
         else{
           System.out.println("Salah input, ayo masukin yang bener >.<");
