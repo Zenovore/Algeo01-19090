@@ -848,7 +848,6 @@ public class Matriks {
       for(k=0;k<sln.kolom();k++){
         sln.salinMatriks(sln2);
         sln.tukarKolom(ambilKolomKeN(kolom()-1), k);
-        sln.tulisMatriks();
         detCram = sln.determinanReduksi();
         hslElemen=detCram/detTot;
         hsl.setElemenKe(k,0,hslElemen);
