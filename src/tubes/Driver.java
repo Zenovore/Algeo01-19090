@@ -34,7 +34,7 @@ class Driver{
           a = Matriks.bacaInterpolasi(s);
         }
         else if (menu==2 || menu ==3) {
-          System.out.printf("Masukkan Baris: ");
+          System.out.printf("Masukkan n: ");
           bar = s.nextInt();
           a = Matriks.bacaMatriks(bar, bar, s);
         }
@@ -103,7 +103,7 @@ class Driver{
         menu = s.nextInt();
         if(menu == 1){
           /* OBE */
-          solusi.append(a.tambahkolom(a.kolom(), a.identitas(a.kolom())).gaussJordan().hapuskolom(a.baris()).stringOfMatriks());
+          solusi.append(a.invers().stringOfMatriks());
         }
         else if(menu == 2){
           solusi.append(a.invers().stringOfMatriks());
@@ -115,7 +115,6 @@ class Driver{
 
       /*----4. INTERPOLASI POLINOM----*/
       else if(menu == 4){
-        /* TODO: Buat interpolasi polinom */
         a = a.interpolasi().gaussJordan();
         solusi.append("\n");
         solusi.append(a.tulisInterpolasi());
@@ -125,7 +124,6 @@ class Driver{
       /*----5. REGRESI LINEAR----*/
       else if(menu == 5){
         solusi.append(a.regresi().gaussJordan().stringSolusiSPL("b", 0));
-        /* TODO: Buat regresi linear */
       }
 
       System.out.println("Mau dikeluarin disini (1) ato di file(2)?");

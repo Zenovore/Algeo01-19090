@@ -250,30 +250,24 @@ public class Matriks {
    * @return determinan
    */
   public double determinan(){
-    int j ;
-    double c=0;
+    int j;
+    double c;
     
-    if (isKotak()){
-      if (((this.baris()) * (this.kolom())) == 1){
-        return (this.elemenKe(0,0));
-      }
-      else if (((this.baris()) * (this.kolom())) == 4){
-        return ((this.elemenKe(0,0)*this.elemenKe(1,1)) - (this.elemenKe(0,1)* this.elemenKe(1,0)));
+    if (this.isKotak()){
+      if (this.baris() == 1){
+        c = this.elemenKe(0,0);
       }
       else{
-        for (j=0;j< this.kolom() ;j++){
-      c += (this.elemenKe(0,j) * (this.entriKofaktor(0,j)));
+        c = 0;
+        for (j = 0; j < this.kolom(); j++){
+          c += this.elemenKe(0, j) * this.entriKofaktor(0, j);
+        }
       }
-      return c;
-      }
-    }
-    else if ((this.baris()) == ((this.kolom())-1)) {
-      this.hapusLastkolom();
-      return (this.determinan());
     }
     else{
-      return(0.0);
+      c = Double.NaN;
     }
+    return c;
   }
 
   /**
@@ -283,14 +277,9 @@ public class Matriks {
   public Matriks kofaktor(){
     Matriks temp = new Matriks(this.baris(),this.kolom());
     int i, j;
-    if (this.baris()<2 || this.kolom()<2) {
-      return this;
-    }
-    else {
-      for (i=0;i<this.baris();i++){
-        for (j=0;j<this.kolom();j++){
-            temp.setElemenKe(i, j, this.entriKofaktor(i, j));
-        }
+    for (i=0;i<this.baris();i++){
+      for (j=0;j<this.kolom();j++){
+          temp.setElemenKe(i, j, this.entriKofaktor(i, j));
       }
     }
     return temp;
@@ -301,7 +290,7 @@ public class Matriks {
    * @return Matriks adjoin
    */
   public Matriks adjoin(){
-    return (this.kofaktor()).transpose();
+    return this.kofaktor().transpose();
   }
 
   /**
@@ -310,16 +299,11 @@ public class Matriks {
    */
   public double entriKofaktor(int x, int y){
     Matriks temp = new Matriks(this.baris()-1,this.kolom()-1);
-    int i,j,g=0,h=0;
-    for (i=0;i<this.baris();i++){
-      for (j=0;j<this.kolom();j++){
-        if (i!=x && j!=y){
-          temp.setElemenKe(g, h, this.elemenKe(i,j));
-          h += 1;
-          if(h==(temp.kolom())){
-            h=0;
-            g++;
-          }
+    int i, j;
+    for (i = 0; i < this.baris(); i++){
+      if(i != x){
+        for (j = 0; j < this.kolom(); j++){
+          if (j != y) temp.setElemenKe(i > x ? i-1 : i, j > y ? j-1 : j, this.elemenKe(i, j));
         }
       }
     }
@@ -339,13 +323,22 @@ public class Matriks {
    }
    return this;
   }
+  public Matriks bagiSkalar(double x){
+    int i, j;
+    for(i = 0; i < this.baris(); i++){
+      for(j = 0; j < this.kolom(); j++){
+        setElemenKe(i, j, elemenKe(i, j)/x);
+      }
+    }
+    return this;
+  }
 
   /**
    * Menginverse matriks
    * @return Matriks yang sudah diinverse
    */
   public Matriks invers(){
-    return(this.adjoin().kaliSkalar(1/this.determinan()));
+    return this.tambahkolom(this.kolom(), this.identitas(this.kolom())).gaussJordan().hapuskolom(this.baris());
   }
   public Matriks identitas(int a){
     int i,j;
@@ -683,8 +676,10 @@ public class Matriks {
    * @return Matriks baru yang sudah ditukar
    */
   public Matriks tukarKolom(Matriks mat, int idx){
-    /** TODO: STUB! */
-    return null;
+    for(int i = 0; i < baris(); i++){
+      setElemenKe(i, idx, mat.elemenKe(i, 0));
+    }
+    return this;
   }
 
   /**
@@ -693,10 +688,9 @@ public class Matriks {
    * @return Matriks solusi SPL
    */
   public Matriks solusiSPLinvers(){
-    Matriks c,Hsl;
+    Matriks c;
     c = this.hapusLastkolom();
-    Hsl = Matriks.kali(this.invers(),c);
-    return Hsl;
+    return Matriks.kali(this.invers(), c);
   }
 
   /**
@@ -837,55 +831,45 @@ public class Matriks {
     int i,j,k;
     Matriks sln= new Matriks(this.baris(),this.kolom());
     Matriks sln2= new Matriks(this.baris(),this.kolom());
-    Matriks nan= new Matriks(this.baris(),this.kolom());
     sln.salinMatriks(this);
     sln2.salinMatriks(this);
     sln.hapusLastkolom();
     sln2.hapusLastkolom();
 
 
-    Matriks hsl=new Matriks(this.baris(),this.kolom());
-    for(i=0;i<hsl.baris();i++){
-      for(j=0;j<hsl.kolom();j++){
-        if(i==j){
-          hsl.setElemenKe(i,j,1);
-        }
-        else{
-          hsl.setElemenKe(i,j,0);
-        }
-      }
-    }
-
-    for(i=0;i<hsl.baris();i++){
-      for(j=0;j<hsl.kolom();j++){
-       nan.setElemenKe(i,j,Double.NaN);
-      }
-    }
+    Matriks hsl=new Matriks(this.baris(),1);
 
 
-    double detTot=sln.determinan();
+    double detTot=sln.determinanReduksi();
     double detCram;
     double hslElemen;
 
     if(detTot !=0 && sln.isKotak() ){
-      for(k=0;k<sln.baris();k++){
-        for(i=0;i<sln.baris();i++){
-          for(j=0;j<sln.kolom();j++){
-            if(j==k){
-              sln.setElemenKe(i,j,this.elemenKe(i,(this.kolom()-1)));
-            }
-          }
-        }
-        detCram=sln.determinanReduksi();
-        hslElemen=detCram/detTot;
-        hsl.setElemenKe(k,(this.kolom()-1),hslElemen);
+      for(k=0;k<sln.kolom();k++){
         sln.salinMatriks(sln2);
+        sln.tukarKolom(ambilKolomKeN(kolom()-1), k);
+        sln.tulisMatriks();
+        detCram = sln.determinanReduksi();
+        hslElemen=detCram/detTot;
+        hsl.setElemenKe(k,0,hslElemen);
       }
-      return hsl;
     }
     else{
-      return nan;
+      for(i=0;i<hsl.baris();i++){
+        for(j=0;j<hsl.kolom();j++){
+         hsl.setElemenKe(i,j,Double.NaN);
+        }
+      }
     }
+    return hsl;
+  }
+
+  public Matriks ambilKolomKeN(int n){
+    Matriks t = new Matriks(baris(), 1);
+    for(int i = 0; i < baris(); i++){
+      t.setElemenKe(i, 0, elemenKe(i, n));
+    }
+    return t;
   }
   
   public double determinanReduksi(){
