@@ -702,7 +702,7 @@ public class Matriks {
                 l++;
               }
             }
-            if(l != count-1) useBaris[first] = i;
+            if(l < count-1) useBaris[first] = i;
           }
         }
         for(int i = 0; i < kolom()-1; i++){
