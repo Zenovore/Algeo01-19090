@@ -773,7 +773,7 @@ public class Matriks {
           if(Double.isFinite(sols[i])) sb.append(df.format(sols[i]));
           else if(useBaris[i] == -1) sb.append("bebas");
           for(int j = i+1; j < kolom()-1 && useBaris[i] != -1; j++){
-            if(Math.abs(elemenKe(useBaris[i], j)) > epsilon){
+            if(Math.abs(elemenKe(useBaris[i], j)) > epsilon && Math.abs(sols[j]) < epsilon){
               if(elemenKe(useBaris[i], j) > 0) sb.append(" - ");
               else sb.append(" + ");
               if(Math.abs(elemenKe(useBaris[i], j))-1 > epsilon)
