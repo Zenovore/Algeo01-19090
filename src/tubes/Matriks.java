@@ -11,7 +11,7 @@ public class Matriks {
   private double[][] mat;
   private int bar, kol;
   private int swaps = 0;
-  private final double epsilon = 1e-30;
+  private final double epsilon = 1e-15;
 
   /**
    * Membuat matriks baru dengan ukuran bar x kol
@@ -338,7 +338,15 @@ public class Matriks {
    * @return Matriks yang sudah diinverse
    */
   public Matriks invers(){
-    return this.tambahkolom(this.kolom(), this.identitas(this.kolom())).gaussJordan().hapuskolom(this.baris());
+    if(Math.abs(determinanReduksi()) < epsilon){
+      for(int i = 0; i < baris(); i++){
+        for(int j = 0; j < kolom(); j++){
+          setElemenKe(i, j, Double.NaN);
+        }
+      }
+    }
+    else this.tambahkolom(this.kolom(), this.identitas(this.kolom())).gaussJordan().hapuskolom(this.baris());
+    return this;
   }
   public Matriks identitas(int a){
     int i,j;
@@ -633,6 +641,7 @@ public class Matriks {
         kolomOperasi++;
       }
     }
+    System.out.println();
     return this;
   }
 
@@ -715,7 +724,7 @@ public class Matriks {
     df.setMaximumFractionDigits(340);
     if(this.kolom() == 1){
       /* Menggunakan Invers */
-      if(Double.isNaN(elemenKe(0, 0))){
+      if(!Double.isFinite(elemenKe(0, 0))){
         /* Tidak ada solusi */
         sb.append("Tidak ada solusi untuk SPL");
       }
@@ -772,8 +781,8 @@ public class Matriks {
           sb.append(String.format("%s%d = ", var, i+offset));
           if(Double.isFinite(sols[i])) sb.append(df.format(sols[i]));
           else if(useBaris[i] == -1) sb.append("bebas");
-          for(int j = i+1; j < kolom()-1 && useBaris[i] != -1; j++){
-            if(Math.abs(elemenKe(useBaris[i], j)) > epsilon && Math.abs(sols[j]) < epsilon){
+          for(int j = i+1; j < kolom()-1; j++){
+            if(useBaris[i] != -1 && Math.abs(elemenKe(useBaris[i], j)) > epsilon && !Double.isFinite(sols[j])){
               if(elemenKe(useBaris[i], j) > 0) sb.append(" - ");
               else sb.append(" + ");
               if(Math.abs(elemenKe(useBaris[i], j))-1 > epsilon)
@@ -840,16 +849,16 @@ public class Matriks {
     Matriks hsl=new Matriks(this.baris(),1);
 
 
-    double detTot=sln.determinanReduksi();
+    double detTot = sln.determinanReduksi();
     double detCram;
     double hslElemen;
 
-    if(detTot !=0 && sln.isKotak() ){
+    if(Math.abs(detTot) < epsilon && sln.isKotak() ){
       for(k=0;k<sln.kolom();k++){
         sln.salinMatriks(sln2);
         sln.tukarKolom(ambilKolomKeN(kolom()-1), k);
         detCram = sln.determinanReduksi();
-        hslElemen=detCram/detTot;
+        hslElemen = detCram/detTot;
         hsl.setElemenKe(k,0,hslElemen);
       }
     }
