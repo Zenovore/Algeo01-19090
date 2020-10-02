@@ -8,6 +8,7 @@ class Driver{
   public static void main(String[] args){
     int menu, source,bar, kolom;
     Matriks a = new Matriks(0, 0);
+    Matriks b;
     String f;
     Scanner s = new Scanner(System.in);
     System.out.printf("MENU");
@@ -54,6 +55,9 @@ class Driver{
           System.out.printf("Masukkan Kolom: ");
           kolom = s.nextInt();
           a = Matriks.bacaMatriks(bar,kolom,s);
+          System.out.printf("Masukkan Matriks B: \n");
+          b = Matriks.bacaMatriks(bar,1,s);
+          a = a.tambahkolom(b.kolom(), b);
         }
 
       }
@@ -75,7 +79,12 @@ class Driver{
           solusi.append(a.solusiSPLGaussJordan().stringSolusiSPL("x", 1));
         }
         else if(menu == 3){
-          solusi.append(a.solusiSPLinvers().stringSolusiSPL("x", 1));
+          if (a.determinan()==0){
+            solusi.append("Tidak ada Solusi SPL");
+          }
+          else {
+            solusi.append(a.solusiSPLinvers().stringSolusiSPL("x", 1));
+          }
         }
         else if(menu == 4){
           /* Cramer */
@@ -90,7 +99,7 @@ class Driver{
       /*---- 2. DETERMINAN ----*/
       else if(menu == 2){
         System.out.println("1. Metode Reduksi Baris");
-        System.out.println("2. Metode Ekspansi Kofaktor");
+        System.out.println("2. Metode Ekspansi Kofaktor (Lebih baik digunakan ketika elemen matriks bukan pecahan)");
         System.out.printf("Masukkan input: ");
         menu = s.nextInt();
         if(menu == 1){
