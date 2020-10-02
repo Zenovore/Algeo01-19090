@@ -707,14 +707,17 @@ public class Matriks {
           }
           if(count == 1){
             sols[first] = elemenKe(i, kolom()-1);
-            useBaris[first] = i;
           }
           if(count > 1){
             sols[first] = elemenKe(i, kolom()-1);
+            int l = 0;
             for(j = first+1; j < kolom()-1; j++){
-              if(Double.isFinite(sols[j]) && useBaris[j] == -1) sols[first] -= sols[j] * elemenKe(i, j);
+              if(Double.isFinite(sols[j]) && useBaris[j] == -1){
+                sols[first] -= sols[j] * elemenKe(i, j);
+                l++;
+              }
             }
-            useBaris[first] = i;
+            if(l != count-1) useBaris[first] = i;
           }
         }
         for(int i = 0; i < kolom()-1; i++){
