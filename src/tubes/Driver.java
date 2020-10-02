@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.Scanner;
 class Driver{
   public static void main(String[] args){
-    int menu, source,bar, kolom;
+    int menu, source,bar, kolom,i;
     Matriks a = new Matriks(0, 0);
     Matriks b;
     String f;
@@ -135,9 +135,13 @@ class Driver{
       /*----4. INTERPOLASI POLINOM----*/
       else if(menu == 4){
         a = a.interpolasi().gaussJordan();
-        solusi.append("\n");
         solusi.append(a.tulisInterpolasi());
-        solusi.append(String.format("%f\n", a.hitungInterpolasi(s)));
+        solusi.append("\n");
+        System.out.printf("Jumlah x yang ingin dicoba: ");
+        bar = s.nextInt();
+        for (i=0;i<bar;i++){
+          solusi.append(String.format("y = %f\n", a.hitungInterpolasi(s)));
+        }
       }
 
       /*----5. REGRESI LINEAR----*/
@@ -176,3 +180,4 @@ class Driver{
     s.close();
   }
 }
+

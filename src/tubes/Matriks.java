@@ -1004,10 +1004,10 @@ public class Matriks {
   }
 
   public Double hitungInterpolasi(Scanner s){
-    double sum=0;
+    double sum=0,bar;
     int i;
     System.out.printf("Masukkan input x: ");
-    bar = s.nextInt();
+    bar = s.nextDouble();
     for(i=0;i<this.baris();i++){
       sum += ((Math.pow(bar,i)) * (this.elemenKe(i, this.kolom()-1)));
     }
